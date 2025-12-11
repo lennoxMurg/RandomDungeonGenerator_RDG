@@ -41,7 +41,6 @@ namespace Projekt
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine(ex.Message);
-
                 }
                 catch
                 {
@@ -51,10 +50,9 @@ namespace Projekt
             }
             while (true);
 
-
         }
 
-        static int breite_eingabe(int breite, int breite_maximum, int breite_minimum)
+        static int breite_eingabe(int breite, int breite_maximum, int breite_minimum)       // Eingabe Methode für breite
         {
             if (breite == 0)
             {
@@ -71,7 +69,7 @@ namespace Projekt
             return breite;
         }
 
-        static int hoehe_eingeben(int hoehe, int hoehe_maximum, int hoehe_minimum)
+        static int hoehe_eingeben(int hoehe, int hoehe_maximum, int hoehe_minimum)      // Eingabe Methode für Höhe
         {
             Console.WriteLine("Bitte die Höhe Eingeben!");
             hoehe = Convert.ToInt32(Console.ReadLine());
@@ -82,5 +80,6 @@ namespace Projekt
             }
             return hoehe;
         }
+
     }
 }
