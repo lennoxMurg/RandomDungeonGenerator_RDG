@@ -14,7 +14,7 @@ namespace Projekt
 
             int breite = 0;
             int hoehe = 0;
-
+            const char WALL = '#';
 
             do
             {
@@ -53,26 +53,45 @@ namespace Projekt
             while (true);
 
 
+            char[,] dungeonFeld = new char[breite, hoehe];
 
 
-            static char[,] InitialisiereDungeonArray(int breite, int hoehe)
+            
+
+
+            InitialisiereDungeon(dungeonFeld, WALL);
+
+
+           
+
+
+     
+        }
+
+        /// <summary>
+        /// Füllt das gesamte Dungeon-Array mit einem bestimmten Zeichen (z.B. der Wand).
+        /// </summary>
+        static void InitialisiereDungeon(char[,] feld, char fuellZeichen)
+        {
+            int zeilen = feld.GetLength(0);
+            int spalten = feld.GetLength(1);
+
+            for (int i = 0; i < zeilen; i++)
             {
-                char[,] dungeon = new char[hoehe, breite];
-
-                for (int y = 0; y < hoehe; y++)
+                for (int j = 0; j < spalten; j++)
                 {
-                    for (int x = 0; x < breite; x++)
-                    {
-                        dungeon[y, x] = '#';
-                    }
+                    feld[i, j] = fuellZeichen;
                 }
-
-                return dungeon;
             }
+        }
+
+
+
+
+    }
 
 
         }
 
 
-    }
-}
+    
