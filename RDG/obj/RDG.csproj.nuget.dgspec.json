@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "P:\\Software Programmieren\\Gruppenarbeit\\RDG\\RDG.csproj": {}
+    "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj": {}
   },
   "projects": {
-    "P:\\Software Programmieren\\Gruppenarbeit\\RDG\\RDG.csproj": {
+    "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "P:\\Software Programmieren\\Gruppenarbeit\\RDG\\RDG.csproj",
+        "projectUniqueName": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
         "projectName": "RDG",
-        "projectPath": "P:\\Software Programmieren\\Gruppenarbeit\\RDG\\RDG.csproj",
+        "projectPath": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
         "packagesPath": "C:\\Users\\lmurg\\.nuget\\packages\\",
-        "outputPath": "P:\\Software Programmieren\\Gruppenarbeit\\RDG\\obj\\",
+        "outputPath": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lmurg\\AppData\\Roaming\\NuGet\\NuGet.Config",
