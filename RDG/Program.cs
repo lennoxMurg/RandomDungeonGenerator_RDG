@@ -28,7 +28,8 @@ namespace Projekt
 
                         if (breite < breite_minimum || breite > breite_maximum)
                         {
-                            throw new ArgumentException("\nDie Breite muss größer als 10 und kleiner als 50 sein .\n");
+                            breite = 0;
+                            throw new ArgumentException("\nDie Breite muss größer als 10 und kleiner als 50 sein.\n");                            
                         }
 
                     }
@@ -39,36 +40,32 @@ namespace Projekt
 
                     if (hoehe < höhe_minimum || hoehe > höhe_maximum)
                     {
+                        hoehe = 0;
                         throw new ArgumentException("\nDie Höhe muss größer als 10 und kleiner als 25 sein.\n");
                     }
-                    break;
+                    
+
+
+                    if(breite != 0 && hoehe != 0)
+                    {
+                        break;
+                    }
+                    
+
                 }
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine(ex.Message);
 
                 }
+                catch
+                {
+                    Console.WriteLine("Es ist ein Unerwarteter Fehler aufgetreten!\n");
+                }
 
             }
             while (true);
 
-
-
-
-            static char[,] InitialisiereDungeonArray(int breite, int hoehe)
-            {
-                char[,] dungeon = new char[hoehe, breite];
-
-                for (int y = 0; y < hoehe; y++)
-                {
-                    for (int x = 0; x < breite; x++)
-                    {
-                        dungeon[y, x] = '#';
-                    }
-                }
-
-                return dungeon;
-            }
 
 
         }
