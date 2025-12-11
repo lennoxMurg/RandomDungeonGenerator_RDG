@@ -14,7 +14,7 @@ namespace Projekt
 
             int breite = 0;
             int hoehe = 0;
-            const char WALL = '#';
+
 
             do
             {
@@ -28,7 +28,8 @@ namespace Projekt
 
                         if (breite < breite_minimum || breite > breite_maximum)
                         {
-                            throw new ArgumentException("\nDie Breite muss größer als 10 und kleiner als 50 sein .\n");
+                            breite = 0;
+                            throw new ArgumentException("\nDie Breite muss größer als 10 und kleiner als 50 sein.\n");                            
                         }
 
                     }
@@ -39,59 +40,36 @@ namespace Projekt
 
                     if (hoehe < höhe_minimum || hoehe > höhe_maximum)
                     {
+                        hoehe = 0;
                         throw new ArgumentException("\nDie Höhe muss größer als 10 und kleiner als 25 sein.\n");
                     }
-                    break;
+                    
+
+
+                    if(breite != 0 && hoehe != 0)
+                    {
+                        break;
+                    }
+                    
+
                 }
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine(ex.Message);
 
                 }
+                catch
+                {
+                    Console.WriteLine("Es ist ein Unerwarteter Fehler aufgetreten!\n");
+                }
 
             }
             while (true);
 
 
-            char[,] dungeonFeld = new char[breite, hoehe];
 
-
-            
-
-
-            InitialisiereDungeon(dungeonFeld, WALL);
-
-
-           
-
-
-     
         }
-
-        /// <summary>
-        /// Füllt das gesamte Dungeon-Array mit einem bestimmten Zeichen (z.B. der Wand).
-        /// </summary>
-        static void InitialisiereDungeon(char[,] feld, char fuellZeichen)
-        {
-            int zeilen = feld.GetLength(0);
-            int spalten = feld.GetLength(1);
-
-            for (int i = 0; i < zeilen; i++)
-            {
-                for (int j = 0; j < spalten; j++)
-                {
-                    feld[i, j] = fuellZeichen;
-                }
-            }
-        }
-
-
 
 
     }
-
-
-        }
-
-
-    
+}
