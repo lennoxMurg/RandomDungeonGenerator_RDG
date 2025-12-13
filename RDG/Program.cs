@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace Projekt
 {
@@ -11,10 +12,13 @@ namespace Projekt
             const char START = 'S';
             const char ENDE = 'E';
 
-            const int breite_minimum = 10;
-            const int breite_maximum = 50;
-            const int hoehe_minimum = 10;               //NOCH GROßSCHREIBEN
-            const int hoehe_maximum = 25;
+            const int BREITE_MINIMUM = 10;
+            const int BREITE_MAXIMUM = 50;
+            const int HOEHE_MINIMUM = 10;               //NOCH GROßSCHREIBEN
+            const int HOEHE_MAXIMUM = 25;
+
+
+            
 
             int breite = 0;
             int hoehe = 0;
@@ -24,11 +28,9 @@ namespace Projekt
                 try
                 {
 
-                    breite = breite_eingabe(breite, breite_maximum, breite_minimum);
+                    breite = breite_eingabe(breite, BREITE_MAXIMUM, BREITE_MINIMUM);
 
-                    Console.Clear();
-
-                    hoehe = hoehe_eingeben(hoehe, hoehe_maximum, hoehe_minimum);
+                    hoehe = hoehe_eingeben(hoehe, HOEHE_MAXIMUM, HOEHE_MINIMUM);
 
 
                     if (breite != 0 && hoehe != 0)
@@ -49,7 +51,22 @@ namespace Projekt
             }
             while (true);
 
+            // F.2.1 Datenstruktur: Zweidimensionales char-Array für die Dungeon-Karte
+            char[,] dungeonFeld = new char[breite, hoehe];
 
+            // Für die zufällige Platzierung von Start und Ende
+            Random zufall = new Random();
+
+            // --- F.2.2 Initialisierung: Array vollständig mit WALL füllen ---
+            InitialisiereDungeon(dungeonFeld, WAND);
+
+            // --- F.2.3 Start- und Endpunkt: Zufällige, nicht-randständige Platzierung ---
+            PlatziereStartUndEnde(dungeonFeld, zufall, START, ENDE);
+
+            // --- Ausgabe: Das gesamte Dungeon-Array ausgeben ---
+            GibDungeonAus(dungeonFeld);
+
+            Console.ReadKey();
 
         }
 

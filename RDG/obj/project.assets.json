@@ -8,19 +8,24 @@
     ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
-    "C:\\Users\\lmurg\\.nuget\\packages\\": {}
+    "C:\\Users\\lenno\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
+      "projectUniqueName": "C:\\Users\\lenno\\source\\repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
       "projectName": "RDG",
-      "projectPath": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
-      "packagesPath": "C:\\Users\\lmurg\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\obj\\",
+      "projectPath": "C:\\Users\\lenno\\source\\repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
+      "packagesPath": "C:\\Users\\lenno\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lenno\\source\\repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\lmurg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lenno\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -32,6 +37,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -39,17 +45,25 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "imports": [
           "net461",
           "net462",
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -58,7 +72,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308\\RuntimeIdentifierGraph.json"
       }
     }
   }
