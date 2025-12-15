@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace Projekt
 {
@@ -18,7 +17,7 @@ namespace Projekt
             const int HOEHE_MAXIMUM = 25;
 
 
-            
+
 
             int breite = 0;
             int hoehe = 0;
@@ -50,6 +49,9 @@ namespace Projekt
 
             }
             while (true);
+
+            Console.Clear();
+
 
             // F.2.1 Datenstruktur: Zweidimensionales char-Array für die Dungeon-Karte
             char[,] dungeonFeld = new char[breite, hoehe];
