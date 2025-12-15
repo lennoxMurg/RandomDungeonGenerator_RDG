@@ -14,7 +14,7 @@ namespace Projekt
 
             const int BREITE_MINIMUM = 10;
             const int BREITE_MAXIMUM = 50;
-            const int HOEHE_MINIMUM = 10;               //NOCH GROßSCHREIBEN
+            const int HOEHE_MINIMUM = 10;
             const int HOEHE_MAXIMUM = 25;
 
 
