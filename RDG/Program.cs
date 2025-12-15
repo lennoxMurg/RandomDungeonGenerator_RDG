@@ -165,5 +165,34 @@ namespace Projekt
             }
         }
 
+        
+        static void SpeichernInTextdatei(char[,] dungeon, int breite, int hoehe)    // Dungeon in eine Textdatei speichern
+        {
+        Console.Write("Geben Sie den Dateinamen ein (mit .txt): ");
+        string dateiname = Console.ReadLine();
+
+        try
+        {
+            using (StreamWriter sw = new StreamWriter(dateiname))
+            {
+                for (int y = 0; y < hoehe; y++)
+                {
+                    for (int x = 0; x < breite; x++)
+                    {
+                        sw.Write(dungeon[y, x]);
+                    }
+                    sw.WriteLine();
+                }
+            }
+            Console.WriteLine($"Dungeon erfolgreich in '{dateiname}' gespeichert.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Speichern der Datei: {ex.Message}");
+        }
+        }
+}
+
     }
 }
+
