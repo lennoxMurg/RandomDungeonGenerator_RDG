@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lbecker\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj": {}
+    "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lbecker\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj": {
+    "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lbecker\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
+        "projectUniqueName": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
         "projectName": "RDG",
-        "projectPath": "C:\\Users\\lbecker\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
-        "packagesPath": "C:\\Users\\lbecker\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lbecker\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\obj\\",
+        "projectPath": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\RDG.csproj",
+        "packagesPath": "C:\\Users\\lmurg\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lmurg\\Source\\Repos\\lennoxMurg\\RandomDungeonGenerator_RDG\\RDG\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\lbecker\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lmurg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
