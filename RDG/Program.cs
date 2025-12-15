@@ -79,7 +79,7 @@ namespace Projekt
         {
             if (breite == 0)
             {
-                Console.WriteLine("Bitte die Breite Eingeben!");
+                Console.WriteLine($"Bitte die Breite eingeben! ({breite_minimum} - {breite_maximum})");
                 breite = Convert.ToInt32(Console.ReadLine());
 
                 if (breite < breite_minimum || breite > breite_maximum)
@@ -94,7 +94,7 @@ namespace Projekt
 
         static int hoehe_eingeben(int hoehe, int hoehe_maximum, int hoehe_minimum)      // Eingabe Methode für Höhe
         {
-            Console.WriteLine("Bitte die Höhe Eingeben!");
+            Console.WriteLine($"Bitte die Höhe eingeben! ({hoehe_minimum} - {hoehe_maximum})");
             hoehe = Convert.ToInt32(Console.ReadLine());
             if (hoehe < hoehe_minimum || hoehe > hoehe_maximum)
             {
