@@ -154,48 +154,68 @@ namespace Projekt
             int zeilen = feld.GetLength(0);
             int spalten = feld.GetLength(1);
 
-            for (int i = 0; i < zeilen; i++)
+            // Äußere Schleife: Höhe (Zeilen)
+            for (int j = 0; j < maxHoehe; j++)
             {
-                for (int j = 0; j < spalten; j++)
+                // Innere Schleife: Breite (Spalten)
+                for (int i = 0; i < maxBreite; i++)
                 {
-                    // Gib das Zeichen an der aktuellen Position aus
-                    Console.Write(feld[i, j]);
-                    // Optional: Fügen Sie ein Leerzeichen für eine bessere Lesbarkeit hinzu
-                    Console.Write(' ');
-                }
-                // Nach Abschluss einer Zeile: Neue Zeile einfügen
-                Console.WriteLine();
-            }
-        }
+                    char aktuellesZeichen = feld[i, j];
 
-
-        static void SpeichernInTextdatei(char[,] dungeon, int breite, int hoehe)    // Dungeon in eine Textdatei speichern
-        {
-            Console.Write("Geben Sie den Dateinamen ein (mit .txt): ");
-            string dateiname = Console.ReadLine();
-
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(dateiname))
-                {
-                    for (int y = 0; y < hoehe; y++)
+                    // Prüfen, ob das Zeichen Start oder Ende ist
+                    if (aktuellesZeichen == startZeichen)
                     {
-                        for (int x = 0; x < breite; x++)
+                        Console.ForegroundColor = ConsoleColor.Green; // Grün für Start
+                    }
+                    else if (aktuellesZeichen == endeZeichen)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red; // Rot für Ende 
+                    }
+                    else
+                    {
+                        Console.ResetColor(); // Standardfarbe für Wände
+                    }
+
+                    // Gib das Zeichen an der aktuellen Position aus
+                    Console.Write(aktuellesZeichen);
+
+                    Console.Write(' '); // Abstand zwischen den Zeichen
+                }
+
+                // Am Ende jeder Zeile: Farbe zurücksetzen und neue Zeile einfügen
+                Console.ResetColor();
+                Console.WriteLine();
+
+
+                static void SpeichernInTextdatei(char[,] dungeon, int breite, int hoehe)    // Dungeon in eine Textdatei speichern
+                {
+                    Console.Write("Geben Sie den Dateinamen ein (mit .txt): ");
+                    string dateiname = Console.ReadLine();
+
+                    try
+                    {
+                        using (StreamWriter sw = new StreamWriter(dateiname))
                         {
-                            sw.Write(dungeon[y, x]);
+                            for (int y = 0; y < hoehe; y++)
+                            {
+                                for (int x = 0; x < breite; x++)
+                                {
+                                    sw.Write(dungeon[y, x]);
+                                }
+                                sw.WriteLine();
+                            }
                         }
-                        sw.WriteLine();
+                        Console.WriteLine($"Dungeon erfolgreich in '{dateiname}' gespeichert.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Fehler beim Speichern der Datei: {ex.Message}");
                     }
                 }
-                Console.WriteLine($"Dungeon erfolgreich in '{dateiname}' gespeichert.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Fehler beim Speichern der Datei: {ex.Message}");
-            }
+
         }
     }
 
-}
 
 
