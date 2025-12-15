@@ -67,7 +67,7 @@ namespace Projekt
             PlatziereStartUndEnde(dungeonFeld, zufall, START, ENDE);
 
             // --- Ausgabe: Das gesamte Dungeon-Array ausgeben ---
-            GibDungeonAus(dungeonFeld);
+            GibDungeonAus(dungeonFeld, BREITE_MAXIMUM, HOEHE_MAXIMUM, START, ENDE);
 
             Console.ReadKey();
 
@@ -146,7 +146,7 @@ namespace Projekt
             feld[endeZeile, endeSpalte] = endeZeichen;
         }
 
-        static void GibDungeonAus(char[,] feld)
+        static void GibDungeonAus(char[,] feld, int BREITE_MAXIMUM, int HOEHE_MAXIMUM, char START, char ENDE)
         {
             Console.WriteLine("--- ZUFALLS-DUNGEON ---");
             Console.WriteLine();
@@ -155,19 +155,19 @@ namespace Projekt
             int spalten = feld.GetLength(1);
 
             // Äußere Schleife: Höhe (Zeilen)
-            for (int j = 0; j < maxHoehe; j++)
+            for (int j = 0; j < HOEHE_MAXIMUM; j++)
             {
                 // Innere Schleife: Breite (Spalten)
-                for (int i = 0; i < maxBreite; i++)
+                for (int i = 0; i < BREITE_MAXIMUM; i++)
                 {
                     char aktuellesZeichen = feld[i, j];
 
                     // Prüfen, ob das Zeichen Start oder Ende ist
-                    if (aktuellesZeichen == startZeichen)
+                    if (aktuellesZeichen == START)
                     {
                         Console.ForegroundColor = ConsoleColor.Green; // Grün für Start
                     }
-                    else if (aktuellesZeichen == endeZeichen)
+                    else if (aktuellesZeichen == ENDE)
                     {
                         Console.ForegroundColor = ConsoleColor.Red; // Rot für Ende 
                     }
