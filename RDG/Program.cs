@@ -71,7 +71,7 @@ namespace Projekt
 
             Console.ReadKey();
 
-
+            SpeichernInTextdatei(dungeonFeld, breite, hoehe);
 
         }
 
