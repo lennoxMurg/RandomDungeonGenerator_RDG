@@ -67,7 +67,7 @@ namespace Projekt
             PlatziereStartUndEnde(dungeonFeld, zufall, START, ENDE);
 
             // --- Ausgabe: Das gesamte Dungeon-Array ausgeben ---
-            GibDungeonAus(dungeonFeld, BREITE_MAXIMUM, HOEHE_MAXIMUM, START, ENDE);
+            GibDungeonAus(dungeonFeld, breite, hoehe, START, ENDE);
 
             Console.ReadKey();
 
@@ -146,7 +146,7 @@ namespace Projekt
             feld[endeZeile, endeSpalte] = endeZeichen;
         }
 
-        static void GibDungeonAus(char[,] feld, int BREITE_MAXIMUM, int HOEHE_MAXIMUM, char START, char ENDE)
+        static void GibDungeonAus(char[,] feld, int breite, int hoehe, char START, char ENDE)
         {
             Console.WriteLine("--- ZUFALLS-DUNGEON ---");
             Console.WriteLine();
@@ -155,10 +155,10 @@ namespace Projekt
             int spalten = feld.GetLength(1);
 
             // Äußere Schleife: Höhe (Zeilen)
-            for (int j = 0; j < HOEHE_MAXIMUM; j++)
+            for (int j = 0; j < hoehe; j++)
             {
                 // Innere Schleife: Breite (Spalten)
-                for (int i = 0; i < BREITE_MAXIMUM; i++)
+                for (int i = 0; i < breite; i++)
                 {
                     char aktuellesZeichen = feld[i, j];
 
@@ -179,7 +179,7 @@ namespace Projekt
                     // Gib das Zeichen an der aktuellen Position aus
                     Console.Write(aktuellesZeichen);
 
-                   Console.Write(' '); // Abstand zwischen den Zeichen
+                    Console.Write(' '); // Abstand zwischen den Zeichen
                 }
 
                 // Am Ende jeder Zeile: Farbe zurücksetzen und neue Zeile einfügen
