@@ -17,3 +17,4 @@ Die Teammitglieder sind:
 ##
 Infos zu Dungeon generierung:
 https://www.astrolog.org/labyrnth/algrithm.htm 
+https://gamedev.stackexchange.com/questions/910/algorithm-for-generating-a-2d-maze
