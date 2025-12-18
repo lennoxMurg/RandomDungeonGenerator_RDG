@@ -85,7 +85,7 @@ namespace Projekt
                 if (breite < breite_minimum || breite > breite_maximum)
                 {
                     breite = 0;
-                    throw new ArgumentException("\nDie Breite muss größer als 10 und kleiner als 50 sein.\n");
+                    throw new ArgumentException($"\nDie Breite muss größer als {breite_minimum} und kleiner als {breite_maximum} sein.\n");
                 }
 
             }
@@ -99,7 +99,7 @@ namespace Projekt
             if (hoehe < hoehe_minimum || hoehe > hoehe_maximum)
             {
                 hoehe = 0;
-                throw new ArgumentException("\nDie Höhe muss größer als 10 und kleiner als 25 sein.\n");
+                throw new ArgumentException($"\nDie Höhe muss größer als {hoehe_minimum} und kleiner als {hoehe_maximum} sein.\n");
             }
             return hoehe;
         }
