@@ -1,6 +1,6 @@
 # RandomDungeonGenerator_RDG
 
-Das ist das RandomDungeonGenerator Projekt (RDG), ein Tool zur Generierung zufälliger Dungeons für Rollenspiele und Abenteuer. 
+Das ist das RandomDungeonGenerator Projekt (RDG), ein Tool zur Generierung zufÃ¤lliger Dungeons fÃ¼r Rollenspiele und Abenteuer. 
 
 
 ## Semicolon Sheriffs
@@ -14,4 +14,6 @@ Die Teammitglieder sind:
 
 
 
-
+##
+Infos zu Dungeon generierung:
+https://www.astrolog.org/labyrnth/algrithm.htm 
