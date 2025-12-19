@@ -26,12 +26,12 @@ namespace Projekt
             {
                 try
                 {
-                        // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                        breite = breite_eingabe(breite);
-                        hoehe = hoehe_eingeben(hoehe);
+                    breite = eingabe_groessen($"Bitte die Breite eingeben! ({BREITE_MINIMUM} - {BREITE_MAXIMUM})", breite, hoehe, 1);
+                    hoehe = eingabe_groessen($"Bitte die Höhe eingeben! ({HOEHE_MINIMUM} - {HOEHE_MAXIMUM})", breite, hoehe, 2);
 
-                        // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
-                        if (breite != 0 && hoehe != 0)
+
+                    // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
+                    if (breite != 0 && hoehe != 0)
                     {
                         break;
                     }
@@ -46,9 +46,9 @@ namespace Projekt
                     // Fängt unvorhergesehene Fehler ab (z.B. falsches Format bei der Eingabe)
                     Console.WriteLine("Es ist ein Unerwarteter Fehler aufgetreten!\n");
                 }
-
             }
             while (true);
+
 
             Console.Clear();
 
@@ -75,6 +75,62 @@ namespace Projekt
         }
 
 
+        static int eingabe_groessen(string aufforderung, int breite, int hoehe, int wert)
+        {
+            if (wert == 1)
+            {
+                if (breite == 0)
+                {
+                    Console.WriteLine(aufforderung);
+                    breite = Convert.ToInt32(Console.ReadLine());
+
+                    if (breite < BREITE_MINIMUM || breite > BREITE_MAXIMUM)
+                    {
+                        breite = 0;
+                        throw new ArgumentException($"\nDie Breite muss größer als {BREITE_MINIMUM} und kleiner als {BREITE_MAXIMUM} sein.\n");
+                    }
+                }
+
+                return breite;
+            }
+            else if (wert == 2)
+            {
+                if (hoehe == 0)
+                {
+                    Console.WriteLine(aufforderung);
+                    hoehe = Convert.ToInt32(Console.ReadLine());
+
+                    if (hoehe < HOEHE_MINIMUM || hoehe > HOEHE_MAXIMUM)
+                    {
+                        hoehe = 0;
+                        throw new ArgumentException($"\nDie Höhe muss größer als {HOEHE_MINIMUM} und kleiner als {HOEHE_MAXIMUM} sein.\n");
+                    }
+                }
+
+                return hoehe;
+            }
+            else
+            {
+                if (hoehe == 0)
+                {
+                    Console.WriteLine($"{aufforderung} ({HOEHE_MINIMUM} - {HOEHE_MAXIMUM})");
+                    hoehe = Convert.ToInt32(Console.ReadLine());
+
+                    if (hoehe < HOEHE_MINIMUM || hoehe > HOEHE_MAXIMUM)
+                    {
+                        hoehe = 0;
+                        throw new ArgumentException($"\nDie Höhe muss größer als {HOEHE_MINIMUM} und kleiner als {HOEHE_MAXIMUM} sein.\n");
+                    }
+                }
+
+                return hoehe;
+            }
+
+
+        }
+
+
+
         // Fragt die Breite ab und prüft, ob sie im erlaubten Bereich liegt.
         static int breite_eingabe(int breite)
         {
@@ -89,6 +145,7 @@ namespace Projekt
                     throw new ArgumentException($"\nDie Breite muss größer als {BREITE_MINIMUM} und kleiner als {BREITE_MAXIMUM} sein.\n");
                 }
             }
+
             return breite;
         }
 
@@ -97,11 +154,13 @@ namespace Projekt
         {
             Console.WriteLine($"Bitte die Höhe eingeben! ({HOEHE_MINIMUM} - {HOEHE_MAXIMUM})");
             hoehe = Convert.ToInt32(Console.ReadLine());
+
             if (hoehe < HOEHE_MINIMUM || hoehe > HOEHE_MAXIMUM)
             {
                 hoehe = 0;
                 throw new ArgumentException($"\nDie Höhe muss größer als {HOEHE_MINIMUM} und kleiner als {HOEHE_MAXIMUM} sein.\n");
             }
+
             return hoehe;
         }
 
