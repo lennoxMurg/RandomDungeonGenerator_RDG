@@ -15,11 +15,11 @@ namespace Projekt
             public const int BREITE_MAXIMUM = 50;
             public const int HOEHE_MINIMUM = 10;
             public const int HOEHE_MAXIMUM = 25;
+
         static void Main(string[] args)
         {          
             int breite = 0;
             int hoehe = 0;
-
 
             // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
             do
@@ -60,7 +60,7 @@ namespace Projekt
             Random zufall = new Random();
 
             // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-            InitialisiereDungeon(dungeonFeld, WAND);
+            InitialisiereDungeon(dungeonFeld);
 
             // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
             PlatziereStartUndEnde(dungeonFeld, zufall);
@@ -106,7 +106,7 @@ namespace Projekt
         }
 
         // Durchläuft das gesamte Array und setzt jedes Feld auf das angegebene Füllzeichen.
-        static void InitialisiereDungeon(char[,] feld, char fuellZeichen)
+        static void InitialisiereDungeon(char[,] feld)
         {
             int zeilen = feld.GetLength(0);
             int spalten = feld.GetLength(1);
@@ -115,7 +115,7 @@ namespace Projekt
             {
                 for (int j = 0; j < spalten; j++)
                 {
-                    feld[i, j] = fuellZeichen;
+                    feld[i, j] = WAND;
                 }
             }
         }
