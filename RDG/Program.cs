@@ -7,7 +7,7 @@ namespace Projekt
     {
         static void Main(string[] args)
         {
-            
+
             // Festlegung der Symbole für die Kartenelemente
             const char WAND = '#';
             const char START = 'S';
@@ -22,15 +22,18 @@ namespace Projekt
             int breite = 0;
             int hoehe = 0;
 
-            
+
             // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
             do
             {
                 try
                 {
-                    // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                    breite = breite_eingabe(breite, BREITE_MAXIMUM, BREITE_MINIMUM);
-                    hoehe = hoehe_eingeben(hoehe, HOEHE_MAXIMUM, HOEHE_MINIMUM);
+                    breite = groessen_eingabe("Bitte die Breite eingeben!", breite, hoehe, BREITE_MAXIMUM, BREITE_MINIMUM, HOEHE_MAXIMUM, HOEHE_MINIMUM);
+                    hoehe = groessen_eingabe("Bitte die Höhe eingeben!", breite, hoehe, BREITE_MAXIMUM, BREITE_MINIMUM, HOEHE_MAXIMUM, HOEHE_MINIMUM);
+
+                            // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
+                    //breite = breite_eingabe(breite, BREITE_MAXIMUM, BREITE_MINIMUM);
+                    //hoehe = hoehe_eingeben(hoehe, HOEHE_MAXIMUM, HOEHE_MINIMUM);
 
                     // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
                     if (breite != 0 && hoehe != 0)
@@ -54,7 +57,7 @@ namespace Projekt
 
             Console.Clear();
 
-            
+
             // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
             char[,] dungeonFeld = new char[breite, hoehe];
 
@@ -67,20 +70,51 @@ namespace Projekt
             // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
             PlatziereStartUndEnde(dungeonFeld, zufall, START, ENDE);
 
-            
             // Zeichnet das Array farbig in die Konsole
             GibDungeonAus(dungeonFeld, breite, hoehe, START, ENDE);
 
             Console.ReadKey();
 
-            
             // Schreibt das Ergebnis in eine vom Benutzer benannte Datei
             SpeichernInTextdatei(dungeonFeld, breite, hoehe);
         }
 
-        
 
-        
+
+        static int groessen_eingabe(string nachricht,int breite, int hoehe, int breite_maximum, int breite_minimum, int hoehe_maximum, int hoehe_minimum)
+        {
+            int eingabe = 0;
+
+            if (breite == 0)
+            {
+                Console.WriteLine($"Bitte die Breite eingeben! ({breite_minimum} - {breite_maximum})");
+                breite = Convert.ToInt32(Console.ReadLine());
+
+                eingabe = breite;
+
+                if (breite < breite_minimum || breite > breite_maximum)
+                {
+                    breite = 0;
+                    throw new ArgumentException($"\nDie Breite muss größer als {breite_minimum} und kleiner als {breite_maximum} sein.\n");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Bitte die Höhe eingeben! ({hoehe_minimum} - {hoehe_maximum})");
+                hoehe = Convert.ToInt32(Console.ReadLine());
+
+                eingabe = hoehe;
+
+                if (hoehe < hoehe_minimum || hoehe > hoehe_maximum)
+                {
+                    hoehe = 0;
+                    throw new ArgumentException($"\nDie Höhe muss größer als {hoehe_minimum} und kleiner als {hoehe_maximum} sein.\n");
+                }
+            }
+
+            return eingabe;
+        }
+
         // Fragt die Breite ab und prüft, ob sie im erlaubten Bereich liegt.
         static int breite_eingabe(int breite, int breite_maximum, int breite_minimum)
         {
@@ -110,7 +144,7 @@ namespace Projekt
             }
             return hoehe;
         }
-        
+
         // Durchläuft das gesamte Array und setzt jedes Feld auf das angegebene Füllzeichen.
         static void InitialisiereDungeon(char[,] feld, char fuellZeichen)
         {
@@ -178,7 +212,7 @@ namespace Projekt
                     }
 
                     Console.Write(aktuellesZeichen);
-                    Console.Write(' '); 
+                    Console.Write(' ');
                 }
                 Console.ResetColor();
                 Console.WriteLine(); // Zeilenumbruch nach jeder vollständigen Zeile
