@@ -5,20 +5,18 @@ namespace Projekt
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-
-            // Festlegung der Symbole für die Kartenelemente
-            const char WAND = '#';
-            const char START = 'S';
-            const char ENDE = 'E';
+         // Festlegung der Symbole für die Kartenelemente
+            public const char WAND = '#';
+            public const char START = 'S';
+            public const char ENDE = 'E';
 
             // Modulare Benutzereingabe
-            const int BREITE_MINIMUM = 10;
-            const int BREITE_MAXIMUM = 50;
-            const int HOEHE_MINIMUM = 10;
-            const int HOEHE_MAXIMUM = 25;
-
+            public const int BREITE_MINIMUM = 10;
+            public const int BREITE_MAXIMUM = 50;
+            public const int HOEHE_MINIMUM = 10;
+            public const int HOEHE_MAXIMUM = 25;
+        static void Main(string[] args)
+        {          
             int breite = 0;
             int hoehe = 0;
 
@@ -29,8 +27,8 @@ namespace Projekt
                 try
                 {
                         // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                        breite = breite_eingabe(breite, BREITE_MAXIMUM, BREITE_MINIMUM);
-                        hoehe = hoehe_eingeben(hoehe, HOEHE_MAXIMUM, HOEHE_MINIMUM);
+                        breite = breite_eingabe(breite);
+                        hoehe = hoehe_eingeben(hoehe);
 
                         // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
                         if (breite != 0 && hoehe != 0)
@@ -65,10 +63,10 @@ namespace Projekt
             InitialisiereDungeon(dungeonFeld, WAND);
 
             // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-            PlatziereStartUndEnde(dungeonFeld, zufall, START, ENDE);
+            PlatziereStartUndEnde(dungeonFeld, zufall);
 
             // Zeichnet das Array farbig in die Konsole
-            GibDungeonAus(dungeonFeld, breite, hoehe, START, ENDE);
+            GibDungeonAus(dungeonFeld, breite, hoehe);
 
             Console.ReadKey();
 
@@ -78,31 +76,31 @@ namespace Projekt
 
 
         // Fragt die Breite ab und prüft, ob sie im erlaubten Bereich liegt.
-        static int breite_eingabe(int breite, int breite_maximum, int breite_minimum)
+        static int breite_eingabe(int breite)
         {
             if (breite == 0)
             {
-                Console.WriteLine($"Bitte die Breite eingeben! ({breite_minimum} - {breite_maximum})");
+                Console.WriteLine($"Bitte die Breite eingeben! ({BREITE_MINIMUM} - {BREITE_MAXIMUM})");
                 breite = Convert.ToInt32(Console.ReadLine());
 
-                if (breite < breite_minimum || breite > breite_maximum)
+                if (breite < BREITE_MINIMUM || breite > BREITE_MAXIMUM)
                 {
                     breite = 0;
-                    throw new ArgumentException($"\nDie Breite muss größer als {breite_minimum} und kleiner als {breite_maximum} sein.\n");
+                    throw new ArgumentException($"\nDie Breite muss größer als {BREITE_MINIMUM} und kleiner als {BREITE_MAXIMUM} sein.\n");
                 }
             }
             return breite;
         }
 
         // Fragt die Höhe ab und prüft, ob sie im erlaubten Bereich liegt.
-        static int hoehe_eingeben(int hoehe, int hoehe_maximum, int hoehe_minimum)
+        static int hoehe_eingeben(int hoehe)
         {
-            Console.WriteLine($"Bitte die Höhe eingeben! ({hoehe_minimum} - {hoehe_maximum})");
+            Console.WriteLine($"Bitte die Höhe eingeben! ({HOEHE_MINIMUM} - {HOEHE_MAXIMUM})");
             hoehe = Convert.ToInt32(Console.ReadLine());
-            if (hoehe < hoehe_minimum || hoehe > hoehe_maximum)
+            if (hoehe < HOEHE_MINIMUM || hoehe > HOEHE_MAXIMUM)
             {
                 hoehe = 0;
-                throw new ArgumentException($"\nDie Höhe muss größer als {hoehe_minimum} und kleiner als {hoehe_maximum} sein.\n");
+                throw new ArgumentException($"\nDie Höhe muss größer als {HOEHE_MINIMUM} und kleiner als {HOEHE_MAXIMUM} sein.\n");
             }
             return hoehe;
         }
@@ -124,7 +122,7 @@ namespace Projekt
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende.
         // Der Rand (Index 0 und Max-1) wird dabei ausgespart.
-        static void PlatziereStartUndEnde(char[,] feld, Random zufall, char startZeichen, char endeZeichen)
+        static void PlatziereStartUndEnde(char[,] feld, Random zufall)
         {
             int maxZeilen = feld.GetLength(0);
             int maxSpalten = feld.GetLength(1);
@@ -132,7 +130,7 @@ namespace Projekt
             // Startpunkt setzen
             int startZeile = zufall.Next(1, maxZeilen - 1);
             int startSpalte = zufall.Next(1, maxSpalten - 1);
-            feld[startZeile, startSpalte] = startZeichen;
+            feld[startZeile, startSpalte] = START;
 
             // Endpunkt setzen (mit Prüfung auf Dopplung)
             int endeZeile, endeSpalte;
@@ -143,11 +141,11 @@ namespace Projekt
             }
             while (endeZeile == startZeile && endeSpalte == startSpalte);
 
-            feld[endeZeile, endeSpalte] = endeZeichen;
+            feld[endeZeile, endeSpalte] = ENDE;
         }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
-        static void GibDungeonAus(char[,] feld, int breite, int hoehe, char START, char ENDE)
+        static void GibDungeonAus(char[,] feld, int breite, int hoehe)
         {
             Console.WriteLine("--- ZUFALLS-DUNGEON ---");
             Console.WriteLine();
