@@ -28,15 +28,12 @@ namespace Projekt
             {
                 try
                 {
-                    breite = groessen_eingabe("Bitte die Breite eingeben!", breite, hoehe, BREITE_MAXIMUM, BREITE_MINIMUM, HOEHE_MAXIMUM, HOEHE_MINIMUM);
-                    hoehe = groessen_eingabe("Bitte die Höhe eingeben!", breite, hoehe, BREITE_MAXIMUM, BREITE_MINIMUM, HOEHE_MAXIMUM, HOEHE_MINIMUM);
+                        // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
+                        breite = breite_eingabe(breite, BREITE_MAXIMUM, BREITE_MINIMUM);
+                        hoehe = hoehe_eingeben(hoehe, HOEHE_MAXIMUM, HOEHE_MINIMUM);
 
-                            // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                    //breite = breite_eingabe(breite, BREITE_MAXIMUM, BREITE_MINIMUM);
-                    //hoehe = hoehe_eingeben(hoehe, HOEHE_MAXIMUM, HOEHE_MINIMUM);
-
-                    // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
-                    if (breite != 0 && hoehe != 0)
+                        // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
+                        if (breite != 0 && hoehe != 0)
                     {
                         break;
                     }
@@ -79,41 +76,6 @@ namespace Projekt
             SpeichernInTextdatei(dungeonFeld, breite, hoehe);
         }
 
-
-
-        static int groessen_eingabe(string nachricht,int breite, int hoehe, int breite_maximum, int breite_minimum, int hoehe_maximum, int hoehe_minimum)
-        {
-            int eingabe = 0;
-
-            if (breite == 0)
-            {
-                Console.WriteLine($"Bitte die Breite eingeben! ({breite_minimum} - {breite_maximum})");
-                breite = Convert.ToInt32(Console.ReadLine());
-
-                eingabe = breite;
-
-                if (breite < breite_minimum || breite > breite_maximum)
-                {
-                    breite = 0;
-                    throw new ArgumentException($"\nDie Breite muss größer als {breite_minimum} und kleiner als {breite_maximum} sein.\n");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Bitte die Höhe eingeben! ({hoehe_minimum} - {hoehe_maximum})");
-                hoehe = Convert.ToInt32(Console.ReadLine());
-
-                eingabe = hoehe;
-
-                if (hoehe < hoehe_minimum || hoehe > hoehe_maximum)
-                {
-                    hoehe = 0;
-                    throw new ArgumentException($"\nDie Höhe muss größer als {hoehe_minimum} und kleiner als {hoehe_maximum} sein.\n");
-                }
-            }
-
-            return eingabe;
-        }
 
         // Fragt die Breite ab und prüft, ob sie im erlaubten Bereich liegt.
         static int breite_eingabe(int breite, int breite_maximum, int breite_minimum)
