@@ -5,33 +5,32 @@ namespace Projekt
 {
     class Program
     {
-         // Festlegung der Symbole für die Kartenelemente
-            public const char WAND = '#';
-            public const char START = 'S';
-            public const char ENDE = 'E';
+        // Festlegung der Symbole für die Kartenelemente
+        public const char WAND = '#';
+        public const char START = 'S';
+        public const char ENDE = 'E';
 
-            // Modulare Benutzereingabe
-            public const int BREITE_MINIMUM = 10;
-            public const int BREITE_MAXIMUM = 50;
-            public const int HOEHE_MINIMUM = 10;
-            public const int HOEHE_MAXIMUM = 25;
+        // Modulare Benutzereingabe
+        public const int BREITE_MINIMUM = 10;
+        public const int BREITE_MAXIMUM = 50;
+        public const int HOEHE_MINIMUM = 10;
+        public const int HOEHE_MAXIMUM = 25;
 
         static void Main(string[] args)
-        {          
-            int breite = 0;
-            int hoehe = 0;
-
+        {
+            int breite = 0, hoehe = 0;
+            
             // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
             do
             {
                 try
                 {
-                        // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                        breite = breite_eingabe(breite);
-                        hoehe = hoehe_eingeben(hoehe);
+                    // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
+                    breite = breite_eingabe(breite);
+                    hoehe = hoehe_eingeben(hoehe);
 
-                        // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
-                        if (breite != 0 && hoehe != 0)
+                    // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
+                    if (breite != 0 && hoehe != 0)
                     {
                         break;
                     }
@@ -106,31 +105,31 @@ namespace Projekt
         }
 
         // Durchläuft das gesamte Array und setzt jedes Feld auf das angegebene Füllzeichen.
-        static void InitialisiereDungeon(char[,] feld)
+        static void InitialisiereDungeon(char[,] dungeonFeld)
         {
-            int zeilen = feld.GetLength(0);
-            int spalten = feld.GetLength(1);
+            int zeilen = dungeonFeld.GetLength(0);
+            int spalten = dungeonFeld.GetLength(1);
 
             for (int i = 0; i < zeilen; i++)
             {
                 for (int j = 0; j < spalten; j++)
                 {
-                    feld[i, j] = WAND;
+                    dungeonFeld[i, j] = WAND;
                 }
             }
         }
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende.
         // Der Rand (Index 0 und Max-1) wird dabei ausgespart.
-        static void PlatziereStartUndEnde(char[,] feld, Random zufall)
+        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall)
         {
-            int maxZeilen = feld.GetLength(0);
-            int maxSpalten = feld.GetLength(1);
+            int maxZeilen = dungeonFeld.GetLength(0);
+            int maxSpalten = dungeonFeld.GetLength(1);
 
             // Startpunkt setzen
             int startZeile = zufall.Next(1, maxZeilen - 1);
             int startSpalte = zufall.Next(1, maxSpalten - 1);
-            feld[startZeile, startSpalte] = START;
+            dungeonFeld[startZeile, startSpalte] = START;
 
             // Endpunkt setzen (mit Prüfung auf Dopplung)
             int endeZeile, endeSpalte;
@@ -141,11 +140,11 @@ namespace Projekt
             }
             while (endeZeile == startZeile && endeSpalte == startSpalte);
 
-            feld[endeZeile, endeSpalte] = ENDE;
+            dungeonFeld[endeZeile, endeSpalte] = ENDE;
         }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
-        static void GibDungeonAus(char[,] feld, int breite, int hoehe)
+        static void GibDungeonAus(char[,] dungeon_feld, int breite, int hoehe)
         {
             Console.WriteLine("--- ZUFALLS-DUNGEON ---");
             Console.WriteLine();
@@ -155,7 +154,7 @@ namespace Projekt
             {
                 for (int i = 0; i < breite; i++)
                 {
-                    char aktuellesZeichen = feld[i, j];
+                    char aktuellesZeichen = dungeon_feld[i, j];
 
                     // Farbwechsel je nach Symbol
                     if (aktuellesZeichen == START)
@@ -180,7 +179,7 @@ namespace Projekt
         }
 
         // Erstellt eine Textdatei und schreibt das Dungeon-Muster hinein.
-        static void SpeichernInTextdatei(char[,] dungeon, int breite, int hoehe)
+        static void SpeichernInTextdatei(char[,] dungeonFeld, int breite, int hoehe)
         {
             Console.Write("Geben Sie den Dateinamen ein (mit .txt): ");
             string dateiname = Console.ReadLine();
@@ -193,7 +192,7 @@ namespace Projekt
                     {
                         for (int x = 0; x < breite; x++)
                         {
-                            sw.Write(dungeon[y, x]);
+                            sw.Write(dungeonFeld[y, x]);
                         }
                         sw.WriteLine();
                     }
@@ -204,6 +203,19 @@ namespace Projekt
             {
                 Console.WriteLine($"Fehler beim Speichern der Datei: {ex.Message}");
             }
+        }
+
+
+        static void pfadgenerierung(char[,] dungeon_feld)
+        {
+            //Wähle startpunkt aus
+            //bewege in eine nicht randständige position
+            //setze .  // Weg symbol
+            //ziehe einen kleinen 'kreis' um den neuen punkt 
+            //wähle zufällig eine richtung aus die noch nicht belegt ist und bei der kein weg ist
+            //wiederhole bis ende erreicht ist
+
+
         }
     }
 }
