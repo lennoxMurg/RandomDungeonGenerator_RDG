@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Data;
 using System.IO;
 
 namespace Projekt
 {
     class Program
     {
+        // Mindestabstand zwischen Start- und Endpunkt
+        public const int START_END_ABSTAND = 3;
+
         // Festlegung der Symbole für die Kartenelemente
-        public const char WAND = '#';
-        public const char START = 'S';
-        public const char ENDE = 'E';
+        public const char WAND_SYMBOL = '#';
+        public const char START_SYMBOL = 'S';
+        public const char END_SYMBOL = 'E';
 
         // Modulare Benutzereingabe
         public const int BREITE_MINIMUM = 10;
@@ -19,7 +23,7 @@ namespace Projekt
         static void Main(string[] args)
         {
             int breite = 0, hoehe = 0;
-            
+
             // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
             do
             {
@@ -52,25 +56,32 @@ namespace Projekt
             Console.Clear();
 
 
-            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-            char[,] dungeonFeld = new char[breite, hoehe];
 
-            // Initialisierung des Zufallsgenerators
-            Random zufall = new Random();
 
-            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-            InitialisiereDungeon(dungeonFeld);
 
-            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-            PlatziereStartUndEnde(dungeonFeld, zufall);
+            for (int i = 0; i <= 100; i++)
+            {
+                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+                char[,] dungeonFeld = new char[breite, hoehe];
 
-            // Zeichnet das Array farbig in die Konsole
-            GibDungeonAus(dungeonFeld, breite, hoehe);
+                // Initialisierung des Zufallsgenerators
+                Random zufall = new Random();
+
+                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+                InitialisiereDungeon(dungeonFeld);
+
+                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+                PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+
+                // Zeichnet das Array farbig in die Konsole
+                GibDungeonAus(dungeonFeld, breite, hoehe);
+            }
+
 
             Console.ReadKey();
 
             // Schreibt das Ergebnis in eine vom Benutzer benannte Datei
-            SpeichernInTextdatei(dungeonFeld, breite, hoehe);
+            //SpeichernInTextdatei(dungeonFeld, breite, hoehe);
         }
 
 
@@ -114,33 +125,32 @@ namespace Projekt
             {
                 for (int j = 0; j < spalten; j++)
                 {
-                    dungeonFeld[i, j] = WAND;
+                    dungeonFeld[i, j] = WAND_SYMBOL;
                 }
             }
         }
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende.
         // Der Rand (Index 0 und Max-1) wird dabei ausgespart.
-        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall)
+        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
         {
-            int maxZeilen = dungeonFeld.GetLength(0);
-            int maxSpalten = dungeonFeld.GetLength(1);
-
             // Startpunkt setzen
-            int startZeile = zufall.Next(1, maxZeilen - 1);
-            int startSpalte = zufall.Next(1, maxSpalten - 1);
-            dungeonFeld[startZeile, startSpalte] = START;
+            int startZeile = zufall.Next(1, breite - 1);
+            int startSpalte = zufall.Next(1, hoehe - 1);
 
-            // Endpunkt setzen (mit Prüfung auf Dopplung)
+            dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
+
+
+            // Endpunkt setzen -> mit Prüfung auf Dopplung und Mindestabstand
             int endeZeile, endeSpalte;
             do
             {
-                endeZeile = zufall.Next(1, maxZeilen - 1);
-                endeSpalte = zufall.Next(1, maxSpalten - 1);
+                endeZeile = zufall.Next(1, breite - 1);
+                endeSpalte = zufall.Next(1, hoehe - 1);
             }
-            while (endeZeile == startZeile && endeSpalte == startSpalte);
+            while ((endeZeile == startZeile && endeSpalte == startSpalte) || Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
-            dungeonFeld[endeZeile, endeSpalte] = ENDE;
+            dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
         }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
@@ -157,11 +167,11 @@ namespace Projekt
                     char aktuellesZeichen = dungeon_feld[i, j];
 
                     // Farbwechsel je nach Symbol
-                    if (aktuellesZeichen == START)
+                    if (aktuellesZeichen == START_SYMBOL)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                     }
-                    else if (aktuellesZeichen == ENDE)
+                    else if (aktuellesZeichen == END_SYMBOL)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                     }
