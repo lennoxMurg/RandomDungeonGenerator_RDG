@@ -6,10 +6,10 @@ namespace Projekt
 {
     class Program
     {
-        //Public variablen für die Konstanten
+        //  Public variablen für die Konstanten
 
         // Mindestabstand zwischen Start- und Endpunkt
-        public const int START_END_ABSTAND = 10;
+        public const int START_END_ABSTAND = 4;
 
         // Festlegung der Symbole für die Kartenelemente
         public const char WAND_SYMBOL = '#';
@@ -33,9 +33,8 @@ namespace Projekt
             {
                 try
                 {
-                    // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                    //breite = breite_eingabe(breite);
-                    //hoehe = hoehe_eingeben(hoehe);
+                    // Aufruf der Methode zur Breiten- und Höheneingabe
+
                     aktuelle_eingabe = "breite";
                     breite = eingabe_dungeon_groesse(breite, hoehe, aktuelle_eingabe);
                     aktuelle_eingabe = "hoehe";
@@ -63,23 +62,21 @@ namespace Projekt
 
             Console.Clear();
 
-            for (int i = 0; i < 10; i++)
-            {
-                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-                char[,] dungeonFeld = new char[breite, hoehe];
+            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+            char[,] dungeonFeld = new char[breite, hoehe];
 
-                // Initialisierung des Zufallsgenerators
-                Random zufall = new Random();
+            // Initialisierung des Zufallsgenerators
+            Random zufall = new Random();
 
-                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-                InitialisiereDungeon(dungeonFeld);
+            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+            InitialisiereDungeon(dungeonFeld);
 
-                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-                PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+            PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-                // Zeichnet das Array farbig in die Konsole
-                GibDungeonAus(dungeonFeld, breite, hoehe);
-            }
+            // Zeichnet das Array farbig in die Konsole
+            GibDungeonAus(dungeonFeld, breite, hoehe);
+
 
 
             Console.ReadKey();
