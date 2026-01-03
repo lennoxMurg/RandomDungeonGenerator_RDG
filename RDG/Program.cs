@@ -65,6 +65,7 @@ namespace Projekt
 
             Console.Clear();
 
+
             // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
             char[,] dungeonFeld = new char[breite, hoehe];
 
@@ -167,7 +168,6 @@ namespace Projekt
                         break;
                     }
 
-
                 } while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
             } while (wiederholen == true);
@@ -178,12 +178,6 @@ namespace Projekt
 
         static void pfadgenerierung(char[,] dungeon_feld)
         {
-            //Wähle startpunkt aus
-            //bewege in eine nicht randständige position
-            //setze .  // Weg symbol
-            //ziehe einen kleinen 'kreis' um den neuen punkt 
-            //wähle zufällig eine richtung aus die noch nicht belegt ist und bei der kein weg ist
-            //wiederhole bis ende erreicht ist
 
 
         }
