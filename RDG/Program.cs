@@ -65,20 +65,18 @@ namespace Projekt
 
             Console.Clear();
 
-            for (int i = 0; i < 300; i++)
-            {
-                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-                char[,] dungeonFeld = new char[breite, hoehe];
+            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+            char[,] dungeonFeld = new char[breite, hoehe];
 
-                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-                InitialisiereDungeon(dungeonFeld);
+            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+            InitialisiereDungeon(dungeonFeld);
 
-                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-                PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+            PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-                // Zeichnet das Array farbig in die Konsole
-                GibDungeonAus(dungeonFeld, breite, hoehe);
-            }
+            // Zeichnet das Array farbig in die Konsole
+            GibDungeonAus(dungeonFeld, breite, hoehe);
+
 
 
             Console.ReadKey();
@@ -143,23 +141,40 @@ namespace Projekt
         // Der Rand wird ignoriert
         static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
         {
-            // Startpunkt setzen        
-            int startZeile = zufall.Next(1, breite - 1);
-            int startSpalte = zufall.Next(1, hoehe - 1);
-
-            dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
-
             int endeZeile, endeSpalte;
+
+            bool wiederholen = false;
+            int versuche = 0;
 
             do
             {
-                endeZeile = zufall.Next(1, breite - 1);
-                endeSpalte = zufall.Next(1, hoehe - 1);
-            }
-            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
+                // Startpunkt setzen        
+                int startZeile = zufall.Next(1, breite - 1);
+                int startSpalte = zufall.Next(1, hoehe - 1);
+
+                dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
+
+
+                do
+                {
+                    endeZeile = zufall.Next(1, breite - 1);
+                    endeSpalte = zufall.Next(1, hoehe - 1);
+
+                    versuche = versuche + 1;
+                    if (versuche > 5)
+                    {
+                        wiederholen = true;
+                        break;
+                    }
+
+
+                } while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
+
+            } while (wiederholen == true);
 
             dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
         }
+
 
         static void pfadgenerierung(char[,] dungeon_feld)
         {
