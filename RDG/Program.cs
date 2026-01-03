@@ -25,6 +25,9 @@ namespace Projekt
 
         static void Main(string[] args)
         {
+            // Initialisierung des Zufallsgenerators
+            Random zufall = new Random();
+
             int breite = 0, hoehe = 0;
             string aktuelle_eingabe;
 
@@ -62,21 +65,20 @@ namespace Projekt
 
             Console.Clear();
 
-            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-            char[,] dungeonFeld = new char[breite, hoehe];
+            for (int i = 0; i < 300; i++)
+            {
+                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+                char[,] dungeonFeld = new char[breite, hoehe];
 
-            // Initialisierung des Zufallsgenerators
-            Random zufall = new Random();
+                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+                InitialisiereDungeon(dungeonFeld);
 
-            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-            InitialisiereDungeon(dungeonFeld);
+                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+                PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-            PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
-
-            // Zeichnet das Array farbig in die Konsole
-            GibDungeonAus(dungeonFeld, breite, hoehe);
-
+                // Zeichnet das Array farbig in die Konsole
+                GibDungeonAus(dungeonFeld, breite, hoehe);
+            }
 
 
             Console.ReadKey();
@@ -137,25 +139,24 @@ namespace Projekt
             }
         }
 
-        // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende.
-        // Der Rand (Index 0 und Max-1) wird dabei ausgespart.
+        // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
+        // Der Rand wird ignoriert
         static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
         {
-            // Startpunkt setzen
+            // Startpunkt setzen        
             int startZeile = zufall.Next(1, breite - 1);
             int startSpalte = zufall.Next(1, hoehe - 1);
 
             dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
 
-
-            // Endpunkt setzen -> mit Prüfung auf Dopplung und Mindestabstand
             int endeZeile, endeSpalte;
+
             do
             {
                 endeZeile = zufall.Next(1, breite - 1);
                 endeSpalte = zufall.Next(1, hoehe - 1);
             }
-            while ((endeZeile == startZeile && endeSpalte == startSpalte) || Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
+            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
             dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
         }
