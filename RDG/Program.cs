@@ -56,11 +56,6 @@ namespace Projekt
             Console.Clear();
 
 
-
-
-
-            for (int i = 0; i <= 100; i++)
-            {
                 // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
                 char[,] dungeonFeld = new char[breite, hoehe];
 
@@ -75,7 +70,7 @@ namespace Projekt
 
                 // Zeichnet das Array farbig in die Konsole
                 GibDungeonAus(dungeonFeld, breite, hoehe);
-            }
+            
 
 
             Console.ReadKey();
@@ -132,7 +127,7 @@ namespace Projekt
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende.
         // Der Rand (Index 0 und Max-1) wird dabei ausgespart.
-        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
+        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)        
         {
             // Startpunkt setzen
             int startZeile = zufall.Next(1, breite - 1);
@@ -151,6 +146,18 @@ namespace Projekt
             while ((endeZeile == startZeile && endeSpalte == startSpalte) || Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
             dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
+        }
+
+        static void pfadgenerierung(char[,] dungeon_feld)
+        {
+            //Wähle startpunkt aus
+            //bewege in eine nicht randständige position
+            //setze .  // Weg symbol
+            //ziehe einen kleinen 'kreis' um den neuen punkt 
+            //wähle zufällig eine richtung aus die noch nicht belegt ist und bei der kein weg ist
+            //wiederhole bis ende erreicht ist
+
+
         }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
@@ -213,19 +220,6 @@ namespace Projekt
             {
                 Console.WriteLine($"Fehler beim Speichern der Datei: {ex.Message}");
             }
-        }
-
-
-        static void pfadgenerierung(char[,] dungeon_feld)
-        {
-            //Wähle startpunkt aus
-            //bewege in eine nicht randständige position
-            //setze .  // Weg symbol
-            //ziehe einen kleinen 'kreis' um den neuen punkt 
-            //wähle zufällig eine richtung aus die noch nicht belegt ist und bei der kein weg ist
-            //wiederhole bis ende erreicht ist
-
-
         }
     }
 }
