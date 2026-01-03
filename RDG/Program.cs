@@ -6,6 +6,8 @@ namespace Projekt
 {
     class Program
     {
+        //Public variablen für die Konstanten
+
         // Mindestabstand zwischen Start- und Endpunkt
         public const int START_END_ABSTAND = 10;
 
@@ -20,9 +22,11 @@ namespace Projekt
         public const int HOEHE_MINIMUM = 10;
         public const int HOEHE_MAXIMUM = 25;
 
+
         static void Main(string[] args)
         {
             int breite = 0, hoehe = 0;
+            string aktuelle_eingabe;
 
             // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
             do
@@ -30,8 +34,12 @@ namespace Projekt
                 try
                 {
                     // Aufruf der Methoden zur Breiteneingabe und Höheneingabe
-                    breite = breite_eingabe(breite);
-                    hoehe = hoehe_eingeben(hoehe);
+                    //breite = breite_eingabe(breite);
+                    //hoehe = hoehe_eingeben(hoehe);
+                    aktuelle_eingabe = "breite";
+                    breite = eingabe_dungeon_groesse(breite, hoehe, aktuelle_eingabe);
+                    aktuelle_eingabe = "hoehe";
+                    hoehe = eingabe_dungeon_groesse(hoehe, breite, aktuelle_eingabe);
 
                     // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
                     if (breite != 0 && hoehe != 0)
@@ -55,7 +63,8 @@ namespace Projekt
 
             Console.Clear();
 
-
+            for (int i = 0; i < 10; i++)
+            {
                 // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
                 char[,] dungeonFeld = new char[breite, hoehe];
 
@@ -70,44 +79,50 @@ namespace Projekt
 
                 // Zeichnet das Array farbig in die Konsole
                 GibDungeonAus(dungeonFeld, breite, hoehe);
-            
+            }
 
 
             Console.ReadKey();
 
-            // Schreibt das Ergebnis in eine vom Benutzer benannte Datei
+            // Schreibt das Ergebnis in eine vom Benutzer benannte Datei    Sorgt noch für Probleme beim Testen/ausführen
             //SpeichernInTextdatei(dungeonFeld, breite, hoehe);
         }
 
 
-        // Fragt die Breite ab und prüft, ob sie im erlaubten Bereich liegt.
-        static int breite_eingabe(int breite)
+        // Eingabe methode für breite und höhe des dungeons
+        static int eingabe_dungeon_groesse(int dungeon_groeße, int andere_groesse, string aktuelle_eingabe)
         {
-            if (breite == 0)
-            {
-                Console.WriteLine($"Bitte die Breite eingeben! ({BREITE_MINIMUM} - {BREITE_MAXIMUM})");
-                breite = Convert.ToInt32(Console.ReadLine());
+            int eingabe = dungeon_groeße;
 
-                if (breite < BREITE_MINIMUM || breite > BREITE_MAXIMUM)
+            if (aktuelle_eingabe == "breite")
+            {
+                if (eingabe == 0)
                 {
-                    breite = 0;
-                    throw new ArgumentException($"\nDie Breite muss größer als {BREITE_MINIMUM} und kleiner als {BREITE_MAXIMUM} sein.\n");
+                    Console.WriteLine($"Bitte die Breite eingeben! ({BREITE_MINIMUM} - {BREITE_MAXIMUM})");
+                    eingabe = Convert.ToInt32(Console.ReadLine());
+
+                    if (eingabe < BREITE_MINIMUM || eingabe > BREITE_MAXIMUM)
+                    {
+                        eingabe = 0;
+                        throw new ArgumentException($"\nDie Breite muss größer als {BREITE_MINIMUM} und kleiner als {BREITE_MAXIMUM} sein.\n");
+                    }
                 }
             }
-            return breite;
-        }
-
-        // Fragt die Höhe ab und prüft, ob sie im erlaubten Bereich liegt.
-        static int hoehe_eingeben(int hoehe)
-        {
-            Console.WriteLine($"Bitte die Höhe eingeben! ({HOEHE_MINIMUM} - {HOEHE_MAXIMUM})");
-            hoehe = Convert.ToInt32(Console.ReadLine());
-            if (hoehe < HOEHE_MINIMUM || hoehe > HOEHE_MAXIMUM)
+            else if (aktuelle_eingabe == "hoehe")
             {
-                hoehe = 0;
-                throw new ArgumentException($"\nDie Höhe muss größer als {HOEHE_MINIMUM} und kleiner als {HOEHE_MAXIMUM} sein.\n");
+                if (eingabe == 0)
+                {
+                    Console.WriteLine($"Bitte die Höhe eingeben! ({HOEHE_MINIMUM} - {HOEHE_MAXIMUM})");
+                    eingabe = Convert.ToInt32(Console.ReadLine());
+                    if (eingabe < HOEHE_MINIMUM || eingabe > HOEHE_MAXIMUM)
+                    {
+                        eingabe = 0;
+                        throw new ArgumentException($"\nDie Höhe muss größer als {HOEHE_MINIMUM} und kleiner als {HOEHE_MAXIMUM} sein.\n");
+                    }
+                }
             }
-            return hoehe;
+
+            return eingabe;
         }
 
         // Durchläuft das gesamte Array und setzt jedes Feld auf das angegebene Füllzeichen.
@@ -127,7 +142,7 @@ namespace Projekt
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende.
         // Der Rand (Index 0 und Max-1) wird dabei ausgespart.
-        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)        
+        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
         {
             // Startpunkt setzen
             int startZeile = zufall.Next(1, breite - 1);
