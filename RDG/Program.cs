@@ -7,7 +7,7 @@ namespace Projekt
     class Program
     {
         // Mindestabstand zwischen Start- und Endpunkt
-        public const int START_END_ABSTAND = 3;
+        public const int START_END_ABSTAND = 10;
 
         // Festlegung der Symbole für die Kartenelemente
         public const char WAND_SYMBOL = '#';
@@ -181,7 +181,7 @@ namespace Projekt
                     }
 
                     Console.Write(aktuellesZeichen);
-                    Console.Write(' ');
+                    Console.Write(' ');     //Abstand zwischen zeichen
                 }
                 Console.ResetColor();
                 Console.WriteLine(); // Zeilenumbruch nach jeder vollständigen Zeile
