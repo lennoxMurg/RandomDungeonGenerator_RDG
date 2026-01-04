@@ -13,6 +13,7 @@ namespace Projekt
 
         // Festlegung der Symbole für die Kartenelemente
         public const char WAND_SYMBOL = '#';
+        public const char BODEN_SYMBOL = '.';
         public const char START_SYMBOL = 'S';
         public const char END_SYMBOL = 'E';
 
@@ -74,6 +75,8 @@ namespace Projekt
 
             // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
             PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+
+            pfadgenerierung(dungeonFeld);
 
             // Zeichnet das Array farbig in die Konsole
             GibDungeonAus(dungeonFeld, breite, hoehe);
@@ -178,9 +181,48 @@ namespace Projekt
 
         static void pfadgenerierung(char[,] dungeon_feld)
         {
+            int breite = dungeon_feld.GetLength(0);
+            int hoehe = dungeon_feld.GetLength(1);
 
+            // Positionen von Start und Ende finden
+            int startX = -1, startY = -1, endX = -1, endY = -1;
 
+            for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
+            {
+                for (int zaehler_hoehe = 0; zaehler_hoehe < hoehe; zaehler_hoehe++)
+                {
+                    if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
+                    {
+                        startX = zaehler_breite;
+                        startY = zaehler_hoehe;
+                    }
+                    else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
+                    {
+                        endX = zaehler_breite;
+                        endY = zaehler_hoehe;
+                    }
+                }
+            }
+
+            // Einfache Pfadgenerierung: horizontal und vertikal verbinden
+            int x = startX;
+            int y = startY;
+
+            while (x != endX)
+            {
+                x += (endX > x) ? 1 : -1;
+                if (dungeon_feld[x, y] == WAND_SYMBOL)
+                    dungeon_feld[x, y] = '.';
+            }
+
+            while (y != endY)
+            {
+                y += (endY > y) ? 1 : -1;
+                if (dungeon_feld[x, y] == WAND_SYMBOL)
+                    dungeon_feld[x, y] = '.';
+            }
         }
+
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
         static void GibDungeonAus(char[,] dungeon_feld, int breite, int hoehe)
