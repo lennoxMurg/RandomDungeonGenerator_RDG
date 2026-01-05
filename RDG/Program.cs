@@ -73,28 +73,27 @@ namespace Projekt
             Console.Clear();
 
 
-            for (int i = 0; i < 5; i++)
-            {
-                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-                char[,] dungeonFeld = new char[breite, hoehe];
 
-                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-                InitialisiereDungeon(dungeonFeld);
+            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+            char[,] dungeonFeld = new char[breite, hoehe];
 
-                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-                (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+            InitialisiereDungeon(dungeonFeld);
 
-                // Pfadgenerierung zwischen Start und Ende
-                Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
+            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+            (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-                // Erstellt weitere Pfade im Dungeon
-                Dungeongenerierung(dungeonFeld, zufall);
+            // Pfadgenerierung zwischen Start und Ende
+            Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
+
+            // Erstellt weitere Pfade im Dungeon
+            Dungeongenerierung(dungeonFeld, zufall);
 
 
-                // Zeichnet das Array farbig in die Konsole
-                GibDungeonAus(dungeonFeld, breite, hoehe);
+            // Zeichnet das Array farbig in die Konsole
+            GibDungeonAus(dungeonFeld, breite, hoehe);
 
-            }
+
 
             Console.ReadKey();
 
@@ -191,7 +190,7 @@ namespace Projekt
 
             dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
 
-            return (dungeonFeld[startZeile, startSpalte], dungeonFeld[endeZeile, endeSpalte]);
+            return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
 
         /*      Alte Pfadgenerierung Methode || Noch hier falls ich es doch nicht wie geplant ändern kann
@@ -201,25 +200,25 @@ namespace Projekt
                     int breite = dungeon_feld.GetLength(0);
                     int hoehe = dungeon_feld.GetLength(1);
 
-                    // Positionen von Start und Ende finden
-                    int startX = -1, startY = -1, endX = -1, endY = -1;
+            // Positionen von Start und Ende finden
+            int startX = -1, startY = -1, endX = -1, endY = -1;
 
-                    for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
+            for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
+            {
+                for (int zaehler_hoehe = 0; zaehler_hoehe < hoehe; zaehler_hoehe++)
+                {
+                    if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
                     {
-                        for (int zaehler_hoehe = 0; zaehler_hoehe < hoehe; zaehler_hoehe++)
-                        {
-                            if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
-                            {
-                                startX = zaehler_breite;
-                                startY = zaehler_hoehe;
-                            }
-                            else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
-                            {
-                                endX = zaehler_breite;
-                                endY = zaehler_hoehe;
-                            }
-                        }
+                        startX = zaehler_breite;
+                        startY = zaehler_hoehe;
                     }
+                    else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
+                    {
+                        endX = zaehler_breite;
+                        endY = zaehler_hoehe;
+                    }
+                }
+            }
 
                     // Einfache Pfadgenerierung: horizontal und vertikal verbinden
                     int x = startX;
@@ -248,7 +247,27 @@ namespace Projekt
             int breite = dungeon_feld.GetLength(0);
             int hoehe = dungeon_feld.GetLength(1);
 
+            int zeile = start_zeile;
+            int spalte = start_spalte;
 
+
+            while (zeile != end_zeile)
+            {
+                zeile += (end_zeile > zeile) ? 1 : -1;
+                if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
+                {
+                    dungeon_feld[zeile, spalte] = WEG_SYMBOL;
+                }
+            }
+
+            while (spalte != end_spalte)
+            {
+                spalte += (end_spalte > spalte) ? 1 : -1;
+                if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
+                {
+                    dungeon_feld[zeile, spalte] = WEG_SYMBOL;
+                }
+            }
 
         }
 
