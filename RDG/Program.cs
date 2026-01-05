@@ -194,7 +194,8 @@ namespace Projekt
             return (dungeonFeld[startZeile, startSpalte], dungeonFeld[endeZeile, endeSpalte]);
         }
 
-        /*
+        /*      Alte Pfadgenerierung Methode || Noch hier falls ich es doch nicht wie geplant ändern kann
+
                 static void pfadgenerierung(char[,] dungeon_feld)
                 {
                     int breite = dungeon_feld.GetLength(0);
@@ -240,76 +241,14 @@ namespace Projekt
                 }
 
         */
-        static void pofadgenerierung(char[,] dungeon)
-        {
-            bool pfadgenerierung_fehler;
-
-            do
-            {
-                pfadgenerierung_fehler = false;
 
 
-                int breite = dungeon.GetLength(0);
-                int hoehe = dungeon.GetLength(1);
-
-                // Start- und Endposition suchen
-                (int x, int y) start = (-1, -1);
-                (int x, int y) ende = (-1, -1);
-
-                for (int bx = 0; bx < breite; bx++)
-                {
-                    for (int hy = 0; hy < hoehe; hy++)
-                    {
-                        if (dungeon[bx, hy] == START_SYMBOL)
-                            start = (bx, hy);
-
-                        if (dungeon[bx, hy] == END_SYMBOL)
-                            ende = (bx, hy);
-                    }
-                }
-
-                // Sicherheitscheck 
-                if (start.x == -1 || ende.x == -1)
-                {
-                    pfadgenerierung_fehler = true;
-                }
-
-            } while (pfadgenerierung_fehler == false);
-
-
-
-            int xPos = start.x;
-            int yPos = start.y;
-
-            // Hilfsfunktion zum Setzen eines Weges
-            void SetWeg(int x, int y)
-            {
-                if (dungeon[x, y] == WAND_SYMBOL)
-                    dungeon[x, y] = WEG_SYMBOL;
-            }
-
-            // Horizontal bewegen
-            while (xPos != ende.x)
-            {
-                xPos += Math.Sign(ende.x - xPos);
-                SetWeg(xPos, yPos);
-            }
-
-            // Vertikal bewegen
-            while (yPos != ende.y)
-            {
-                yPos += Math.Sign(ende.y - yPos);
-                SetWeg(xPos, yPos);
-            }
-        }
-
-
-        static void Pfadgenerierung(char[,] dungeon_feld, char start_punkt, char end_punkt)
+        static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
             int breite = dungeon_feld.GetLength(0);
             int hoehe = dungeon_feld.GetLength(1);
 
-            
+
 
         }
 
