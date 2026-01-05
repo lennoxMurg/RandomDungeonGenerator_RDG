@@ -29,6 +29,9 @@ namespace Projekt
 
         static void Main(string[] args)
         {
+            (int zeile, int spalte) start_punkt_ = (0, 0);
+            (int zeile, int spalte) end_punkt_ = (0, 0);
+
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
 
@@ -68,6 +71,7 @@ namespace Projekt
             while (true);
 
             Console.Clear();
+
 
             for (int i = 0; i < 5; i++)
             {
