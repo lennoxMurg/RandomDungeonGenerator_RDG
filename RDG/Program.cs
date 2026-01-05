@@ -29,9 +29,6 @@ namespace Projekt
 
         static void Main(string[] args)
         {
-            (int start_zeile, int start_spalte) start_punkt_ = (0, 0);
-            (int end_zeile, int end_spalte) end_punkt_ = (0, 0);
-
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
 
@@ -157,41 +154,30 @@ namespace Projekt
         // Der Rand wird ignoriert
         static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
         {
-            int startZeile, startSpalte;
-            int endeZeile, endeSpalte;
+            int start_zeile, start_spalte;
+            int ende_zeile, ende_spalte;
 
-            bool wiederholen = false;
-            int versuche = 0;
+            bool dungeon_notwendig = false;
 
             do
             {
-                startZeile = zufall.Next(1, breite - 1);
-                startSpalte = zufall.Next(1, hoehe - 1);
+                start_zeile = zufall.Next(1, breite - 1);
+                start_spalte = zufall.Next(1, hoehe - 1);
 
-                dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
-
-                do
-                {
-                    endeZeile = zufall.Next(1, breite - 1);
-                    endeSpalte = zufall.Next(1, hoehe - 1);
+                dungeonFeld[start_zeile, start_spalte] = START_SYMBOL;
 
 
-                    if (dungeonFeld[endeZeile, endeSpalte] == START_SYMBOL)
-                    {
-                        startZeile = zufall.Next(1, breite - 1);
-                        startSpalte = zufall.Next(1, hoehe - 1);
+                ende_zeile = zufall.Next(1, breite - 1);
+                ende_spalte = zufall.Next(1, hoehe - 1);
 
-                    }
+                dungeonFeld[ende_zeile, ende_spalte] = END_SYMBOL;
 
-
-                } while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) > START_END_ABSTAND);
-
-            } while (wiederholen);
+                FindeStartundEnde(start_zeile, start_spalte, ende_zeile, ende_spalte);
 
 
-            dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
+            } while (dungeon_notwendig == true);
 
-            return (startZeile, startSpalte, endeZeile, endeSpalte);
+            return (start_zeile, start_spalte, ende_zeile, ende_spalte);
         }
 
 
