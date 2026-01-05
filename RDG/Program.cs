@@ -29,8 +29,8 @@ namespace Projekt
 
         static void Main(string[] args)
         {
-            (int zeile, int spalte) start_punkt_ = (0, 0);
-            (int zeile, int spalte) end_punkt_ = (0, 0);
+            (int start_zeile, int start_spalte) start_punkt_ = (0, 0);
+            (int end_zeile, int end_spalte) end_punkt_ = (0, 0);
 
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
@@ -82,10 +82,10 @@ namespace Projekt
                 InitialisiereDungeon(dungeonFeld);
 
                 // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-                (char start_punkt, char end_punkt) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+                (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
                 // Pfadgenerierung zwischen Start und Ende
-                Pfadgenerierung(dungeonFeld, start_punkt, end_punkt);
+                Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
                 // Erstellt weitere Pfade im Dungeon
                 Dungeongenerierung(dungeonFeld, zufall);
@@ -156,7 +156,7 @@ namespace Projekt
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
         // Der Rand wird ignoriert
-        static  PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
+        static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
         {
             int startZeile, startSpalte;
             int endeZeile, endeSpalte;
