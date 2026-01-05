@@ -8,9 +8,6 @@ namespace Projekt
     {
         //  Public variablen für die Konstanten
 
-        // Mindestabstand zwischen Start- und Endpunkt
-        public const int START_END_ABSTAND = 20;
-
         // Dichte des Dungeons (je kleiner der Wert, desto dichter / Mehr Wege)
         public const int DUNGEON_DICHTE = 8;
 
@@ -25,6 +22,9 @@ namespace Projekt
         public const int BREITE_MAXIMUM = 50;
         public const int HOEHE_MINIMUM = 10;
         public const int HOEHE_MAXIMUM = 25;
+
+        // Mindestabstand zwischen Start- und Endpunkt      NIEMALS ÜBER DEM MINIMUM (BREITE || HOEHE) / 2
+        public const int START_END_ABSTAND = 3;
 
 
         static void Main(string[] args)
@@ -165,33 +165,35 @@ namespace Projekt
 
             do
             {
-                // Startpunkt setzen        
                 startZeile = zufall.Next(1, breite - 1);
                 startSpalte = zufall.Next(1, hoehe - 1);
 
                 dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
-
 
                 do
                 {
                     endeZeile = zufall.Next(1, breite - 1);
                     endeSpalte = zufall.Next(1, hoehe - 1);
 
-                    versuche = versuche + 1;
-                    if (versuche > 5)
+
+                    if (dungeonFeld[endeZeile, endeSpalte] == START_SYMBOL)
                     {
-                        wiederholen = true;
-                        break;
+                        startZeile = zufall.Next(1, breite - 1);
+                        startSpalte = zufall.Next(1, hoehe - 1);
+
                     }
 
-                } while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
-            } while (wiederholen == true);
+                } while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) > START_END_ABSTAND);
+
+            } while (wiederholen);
+
 
             dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
 
             return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
+
 
         /*      Alte Pfadgenerierung Methode || Noch hier falls ich es doch nicht wie geplant ändern kann
 
