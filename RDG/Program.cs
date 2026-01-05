@@ -152,7 +152,7 @@ namespace Projekt
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
         // Der Rand wird ignoriert
-        static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
+        static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
             int start_zeile, start_spalte;
             int ende_zeile, ende_spalte;
@@ -164,15 +164,15 @@ namespace Projekt
                 start_zeile = zufall.Next(1, breite - 1);
                 start_spalte = zufall.Next(1, hoehe - 1);
 
-                dungeonFeld[start_zeile, start_spalte] = START_SYMBOL;
+                dungeonfeld[start_zeile, start_spalte] = START_SYMBOL;
 
 
                 ende_zeile = zufall.Next(1, breite - 1);
                 ende_spalte = zufall.Next(1, hoehe - 1);
 
-                dungeonFeld[ende_zeile, ende_spalte] = END_SYMBOL;
+                dungeonfeld[ende_zeile, ende_spalte] = END_SYMBOL;
 
-                FindeStartundEnde(start_zeile, start_spalte, ende_zeile, ende_spalte);
+                FindeStart_Ende(dungeonfeld, start_zeile, start_spalte, ende_zeile, ende_spalte);
 
 
             } while (dungeon_notwendig == true);
@@ -180,8 +180,38 @@ namespace Projekt
             return (start_zeile, start_spalte, ende_zeile, ende_spalte);
         }
 
+        // Positionen von Start und Ende finden
+        static bool FindeStart_Ende(char[,] dungeon_feld, int start_zeile, int start_spalte, int ende_zeile, int ende_spalte)
+        {
+            bool dungeon_vollstaendig = false;
 
-        /*      Alte Pfadgenerierung Methode || Noch hier falls ich es doch nicht wie geplant ändern kann
+            int breite = dungeon_feld.GetLength(0);
+            int hoehe = dungeon_feld.GetLength(1);
+
+            int startX = -1, startY = -1, endX = -1, endY = -1;
+
+            for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
+            {
+                for (int zaehler_hoehe = 0; zaehler_hoehe < hoehe; zaehler_hoehe++)
+                {
+                    if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
+                    {
+                        startX = zaehler_breite;
+                        startY = zaehler_hoehe;
+                    }
+                    else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
+                    {
+                        endX = zaehler_breite;
+                        endY = zaehler_hoehe;
+                    }
+                }
+            }
+
+            return dungeon_vollstaendig;
+        }
+
+
+        /*      Alte Pfadgenerierung Methode || Noch hier falls ich es doch nicht wie geplant ändern kann oder falls ich cod klauen kann (Ist meiner)
 
                 static void pfadgenerierung(char[,] dungeon_feld)
                 {
