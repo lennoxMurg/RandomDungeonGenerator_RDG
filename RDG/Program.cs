@@ -157,43 +157,13 @@ namespace Projekt
 
         }
 
-        /*
-                // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
-                // Der Rand wird ignoriert
-                static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
-                {
-                    int start_zeile, start_spalte;
-                    int ende_zeile, ende_spalte;
 
-                    bool dungeon_notwendig = false;
-
-                    do
-                    {
-                        start_zeile = zufall.Next(1, breite - 1);
-                        start_spalte = zufall.Next(1, hoehe - 1);
-
-                        dungeonfeld[start_zeile, start_spalte] = START_SYMBOL;
-
-
-                        ende_zeile = zufall.Next(1, breite - 1);
-                        ende_spalte = zufall.Next(1, hoehe - 1);
-
-                        dungeonfeld[ende_zeile, ende_spalte] = END_SYMBOL;
-
-                        dungeon_notwendig = PruefeVollstaendigkeit(dungeonfeld, start_zeile, start_spalte, ende_zeile, ende_spalte);
-
-
-                    } while (dungeon_notwendig == true && (Math.Abs(ende_zeile - start_zeile) + Math.Abs(ende_spalte - start_spalte) < START_END_ABSTAND));
-
-                    return (start_zeile, start_spalte, ende_zeile, ende_spalte);
-                }
-        */
 
         static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
             // Mindestdistanz zum Verhindern, dass Start und Ende zu nah beieinander liegen || Oder sogar nebeneinander
 
-            int start_end_abstand = (breite * hoehe) / 20;
+            int start_end_abstand = (breite * hoehe) / breite - hoehe;
 
             int startZeile, startSpalte;
             int endeZeile, endeSpalte;
