@@ -84,7 +84,7 @@ namespace Projekt
             Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
             // Erstellt weitere Pfade im Dungeon
-            Dungeongenerierung(dungeonFeld, zufall);
+            // Dungeongenerierung(dungeonFeld, zufall);
 
 
             // Zeichnet das Array farbig in die Konsole
@@ -183,12 +183,12 @@ namespace Projekt
         // Positionen von Start und Ende finden
         static bool FindeStart_Ende(char[,] dungeon_feld, int start_zeile, int start_spalte, int ende_zeile, int ende_spalte)
         {
-            bool dungeon_vollstaendig = false;
+            bool dungeon_vollstaendigkeit = false;
 
             int breite = dungeon_feld.GetLength(0);
             int hoehe = dungeon_feld.GetLength(1);
 
-            int startX = -1, startY = -1, endX = -1, endY = -1;
+            int start_x = -1, start_y = -1, end_x = -1, end_y = -1;
 
             for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
             {
@@ -196,18 +196,27 @@ namespace Projekt
                 {
                     if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
                     {
-                        startX = zaehler_breite;
-                        startY = zaehler_hoehe;
+                        start_x = zaehler_breite;
+                        start_y = zaehler_hoehe;
                     }
                     else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
                     {
-                        endX = zaehler_breite;
-                        endY = zaehler_hoehe;
+                        end_x = zaehler_breite;
+                        end_y = zaehler_hoehe;
                     }
                 }
             }
 
-            return dungeon_vollstaendig;
+            if (start_x < 0 || start_y < 0 || end_x < 0 || end_y < 0)
+            {
+                dungeon_vollstaendigkeit = false;
+            }
+            else if (start_x > 0 || start_y > 0 || end_x > 0 || end_y > 0)
+            {
+                dungeon_vollstaendigkeit = true;
+            }
+
+            return dungeon_vollstaendigkeit;
         }
 
 
