@@ -11,6 +11,9 @@ namespace Projekt
         // Dichte des Dungeons (je kleiner der Wert, desto dichter / Mehr Wege)
         public const int DUNGEON_DICHTE = 8;
 
+        // Mindestabstand zwischen Start und Ende
+        public const int START_END_ABSTAND = 4;
+
         // Festlegung der Symbole für die Kartenelemente
         public const char WAND_SYMBOL = '#';
         public const char WEG_SYMBOL = '.';
@@ -159,10 +162,6 @@ namespace Projekt
 
         static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
-            // Mindestdistanz zum Verhindern, dass Start und Ende zu nah beieinander liegen || Oder sogar nebeneinander
-
-
-
             int startZeile, startSpalte;
             int endeZeile, endeSpalte;
 
@@ -176,7 +175,7 @@ namespace Projekt
                 endeZeile = zufall.Next(1, breite - 1);
                 endeSpalte = zufall.Next(1, hoehe - 1);
             }
-            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < 4); // Mindestabstand von 4 - 1 Feldern (also 3)
+            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
             // Sicherstellen: Feld vorher sauber (optional, aber robust)
             dungeonfeld[startZeile, startSpalte] = START_SYMBOL;
