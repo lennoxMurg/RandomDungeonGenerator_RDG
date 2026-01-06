@@ -165,19 +165,19 @@ namespace Projekt
             int startZeile, startSpalte;
             int endeZeile, endeSpalte;
 
-            // Start zufällig setzen
+            // Start position zufällig suchen
             startZeile = zufall.Next(1, breite - 1);
             startSpalte = zufall.Next(1, hoehe - 1);
 
             do
             {
-                // Ende zufällig setzen
+                // Ende position zufällig suchen
                 endeZeile = zufall.Next(1, breite - 1);
                 endeSpalte = zufall.Next(1, hoehe - 1);
             }
             while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
-            // Sicherstellen: Feld vorher sauber (optional, aber robust)
+            // Start und Ende setzen
             dungeonfeld[startZeile, startSpalte] = START_SYMBOL;
             dungeonfeld[endeZeile, endeSpalte] = END_SYMBOL;
 
@@ -185,7 +185,8 @@ namespace Projekt
         }
 
 
-        // Generiert einen Pfad zwischen Start- und Endpunkt
+        // Generiert einen geraden Pfad zwischen Start- und Endpunkt
+        // erstellt L-förmigen Pfad || Nur temporär oder als toggle option?
         static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
             int breite = dungeon_feld.GetLength(0);
@@ -214,7 +215,7 @@ namespace Projekt
             }
         }
 
-        static void Dungeongenerierung(char[,] dungeon_feld, Random zufall)
+        static void Dungeongenerierung(char[,] dungeon_feld, Random zufall, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
             int breite = dungeon_feld.GetLength(0);
             int hoehe = dungeon_feld.GetLength(1);
