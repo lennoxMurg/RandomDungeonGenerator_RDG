@@ -8,12 +8,12 @@ namespace Projekt
     {
         //  Public variablen für die Konstanten
 
-        // Mindestabstand zwischen Start- und Endpunkt
-        public const int START_END_ABSTAND = 4;
+        // Dichte des Dungeons (je kleiner der Wert, desto dichter / Mehr Wege)
+        public const int DUNGEON_DICHTE = 8;
 
         // Festlegung der Symbole für die Kartenelemente
         public const char WAND_SYMBOL = '#';
-        public const char BODEN_SYMBOL = '.';
+        public const char WEG_SYMBOL = '.';
         public const char START_SYMBOL = 'S';
         public const char END_SYMBOL = 'E';
 
@@ -23,9 +23,14 @@ namespace Projekt
         public const int HOEHE_MINIMUM = 10;
         public const int HOEHE_MAXIMUM = 25;
 
+        // Mindestabstand zwischen Start- und Endpunkt      NIEMALS ÜBER DEM MINIMUM (BREITE || HOEHE) / 2
+        public const int START_END_ABSTAND = 3;
+
 
         static void Main(string[] args)
         {
+            int dungeon_anzahl = 100; // Anzahl der zu generierenden Dungeons erstmal als Testwert 
+
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
 
@@ -67,21 +72,28 @@ namespace Projekt
             Console.Clear();
 
 
-            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-            char[,] dungeonFeld = new char[breite, hoehe];
+            for (int i = 0; i < dungeon_anzahl; i++)
+            {
+                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+                char[,] dungeonFeld = new char[breite, hoehe];
 
-            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-            InitialisiereDungeon(dungeonFeld);
+                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+                InitialisiereDungeon(dungeonFeld);
 
-            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-            PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+                (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-            pfadgenerierung(dungeonFeld);
+                // Pfadgenerierung zwischen Start und Ende
+                //Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
-            // Zeichnet das Array farbig in die Konsole
-            GibDungeonAus(dungeonFeld, breite, hoehe);
+                // Erstellt weitere Pfade im Dungeon
+                Dungeongenerierung(dungeonFeld, zufall);
 
 
+                // Zeichnet das Array farbig in die Konsole
+                GibDungeonAus(dungeonFeld, breite, hoehe);
+
+            }
 
             Console.ReadKey();
 
@@ -143,49 +155,43 @@ namespace Projekt
 
         // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
         // Der Rand wird ignoriert
-        static void PlatziereStartUndEnde(char[,] dungeonFeld, Random zufall, int breite, int hoehe)
+        static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
-            int endeZeile, endeSpalte;
+            int start_zeile, start_spalte;
+            int ende_zeile, ende_spalte;
 
-            bool wiederholen = false;
-            int versuche = 0;
+            bool dungeon_notwendig = false;
 
             do
             {
-                // Startpunkt setzen        
-                int startZeile = zufall.Next(1, breite - 1);
-                int startSpalte = zufall.Next(1, hoehe - 1);
+                start_zeile = zufall.Next(1, breite - 1);
+                start_spalte = zufall.Next(1, hoehe - 1);
 
-                dungeonFeld[startZeile, startSpalte] = START_SYMBOL;
+                dungeonfeld[start_zeile, start_spalte] = START_SYMBOL;
 
 
-                do
-                {
-                    endeZeile = zufall.Next(1, breite - 1);
-                    endeSpalte = zufall.Next(1, hoehe - 1);
+                ende_zeile = zufall.Next(1, breite - 1);
+                ende_spalte = zufall.Next(1, hoehe - 1);
 
-                    versuche = versuche + 1;
-                    if (versuche > 5)
-                    {
-                        wiederholen = true;
-                        break;
-                    }
+                dungeonfeld[ende_zeile, ende_spalte] = END_SYMBOL;
 
-                } while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
+                FindeStart_Ende(dungeonfeld, start_zeile, start_spalte, ende_zeile, ende_spalte);
 
-            } while (wiederholen == true);
 
-            dungeonFeld[endeZeile, endeSpalte] = END_SYMBOL;
+            } while (dungeon_notwendig == true);
+
+            return (start_zeile, start_spalte, ende_zeile, ende_spalte);
         }
 
-
-        static void pfadgenerierung(char[,] dungeon_feld)
+        // Positionen von Start und Ende finden
+        static bool FindeStart_Ende(char[,] dungeon_feld, int start_zeile, int start_spalte, int ende_zeile, int ende_spalte)
         {
+            bool dungeon_vollstaendigkeit = false;
+
             int breite = dungeon_feld.GetLength(0);
             int hoehe = dungeon_feld.GetLength(1);
 
-            // Positionen von Start und Ende finden
-            int startX = -1, startY = -1, endX = -1, endY = -1;
+            int start_x = -1, start_y = -1, end_x = -1, end_y = -1;
 
             for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
             {
@@ -193,33 +199,91 @@ namespace Projekt
                 {
                     if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
                     {
-                        startX = zaehler_breite;
-                        startY = zaehler_hoehe;
+                        start_x = zaehler_breite;
+                        start_y = zaehler_hoehe;
                     }
                     else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
                     {
-                        endX = zaehler_breite;
-                        endY = zaehler_hoehe;
+                        end_x = zaehler_breite;
+                        end_y = zaehler_hoehe;
                     }
                 }
             }
 
-            // Einfache Pfadgenerierung: horizontal und vertikal verbinden
-            int x = startX;
-            int y = startY;
-
-            while (x != endX)
+            if (start_x < 0 || start_y < 0 || end_x < 0 || end_y < 0)
             {
-                x += (endX > x) ? 1 : -1;
-                if (dungeon_feld[x, y] == WAND_SYMBOL)
-                    dungeon_feld[x, y] = '.';
+                dungeon_vollstaendigkeit = false;
+            }
+            else if (start_x > 0 || start_y > 0 || end_x > 0 || end_y > 0)
+            {
+                dungeon_vollstaendigkeit = true;
             }
 
-            while (y != endY)
+            return dungeon_vollstaendigkeit;
+        }
+
+        // Generiert einen Pfad zwischen Start- und Endpunkt
+        static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
+        {
+            int breite = dungeon_feld.GetLength(0);
+            int hoehe = dungeon_feld.GetLength(1);
+
+            int zeile = start_zeile;
+            int spalte = start_spalte;
+
+
+            while (zeile != end_zeile)
             {
-                y += (endY > y) ? 1 : -1;
-                if (dungeon_feld[x, y] == WAND_SYMBOL)
-                    dungeon_feld[x, y] = '.';
+                zeile += (end_zeile > zeile) ? 1 : -1;
+                if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
+                {
+                    dungeon_feld[zeile, spalte] = WEG_SYMBOL;
+                }
+            }
+
+            while (spalte != end_spalte)
+            {
+                spalte += (end_spalte > spalte) ? 1 : -1;
+                if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
+                {
+                    dungeon_feld[zeile, spalte] = WEG_SYMBOL;
+                }
+            }
+
+        }
+
+        static void Dungeongenerierung(char[,] dungeon_feld, Random zufall)
+        {
+            int breite = dungeon_feld.GetLength(0);
+            int hoehe = dungeon_feld.GetLength(1);
+
+            // Zusätzliche Pfade generieren
+            for (int i = 0; i < breite * hoehe / DUNGEON_DICHTE; i++) // Anzahl der zusätzlichen Pfade basierend auf der Größe
+            {
+                int x = zufall.Next(1, breite - 1);
+                int y = zufall.Next(1, hoehe - 1);
+
+                // Erstelle einen kleinen Raum oder Korridor
+                for (int j = 0; j < 5; j++) // Länge des Korridors
+                {
+                    if (x > 0 && x < breite - 1 && y > 0 && y < hoehe - 1)
+                    {
+                        if (dungeon_feld[x, y] == WAND_SYMBOL)
+                        {
+                            dungeon_feld[x, y] = WEG_SYMBOL;
+                        }
+
+                        // Zufällige Richtung wählen
+                        int richtung = zufall.Next(4);
+                        switch (richtung)
+                        {
+                            case 0: x++; break; // Rechts
+                            case 1: x--; break; // Links
+                            case 2: y++; break; // Unten
+                            case 3: y--; break; // Oben
+                        }
+                    }
+                }
             }
         }
 
