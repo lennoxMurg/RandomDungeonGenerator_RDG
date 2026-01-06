@@ -29,6 +29,8 @@ namespace Projekt
 
         static void Main(string[] args)
         {
+            int dungeon_anzahl = 100; // Anzahl der zu generierenden Dungeons erstmal als Testwert 
+
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
 
@@ -70,27 +72,28 @@ namespace Projekt
             Console.Clear();
 
 
+            for (int i = 0; i < dungeon_anzahl; i++)
+            {
+                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+                char[,] dungeonFeld = new char[breite, hoehe];
 
-            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-            char[,] dungeonFeld = new char[breite, hoehe];
+                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+                InitialisiereDungeon(dungeonFeld);
 
-            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-            InitialisiereDungeon(dungeonFeld);
+                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
+                (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-            // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-            (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+                // Pfadgenerierung zwischen Start und Ende
+                //Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
-            // Pfadgenerierung zwischen Start und Ende
-            Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
-
-            // Erstellt weitere Pfade im Dungeon
-            // Dungeongenerierung(dungeonFeld, zufall);
-
-
-            // Zeichnet das Array farbig in die Konsole
-            GibDungeonAus(dungeonFeld, breite, hoehe);
+                // Erstellt weitere Pfade im Dungeon
+                Dungeongenerierung(dungeonFeld, zufall);
 
 
+                // Zeichnet das Array farbig in die Konsole
+                GibDungeonAus(dungeonFeld, breite, hoehe);
+
+            }
 
             Console.ReadKey();
 
@@ -219,56 +222,7 @@ namespace Projekt
             return dungeon_vollstaendigkeit;
         }
 
-
-        /*      Alte Pfadgenerierung Methode || Noch hier falls ich es doch nicht wie geplant ändern kann oder falls ich cod klauen kann (Ist meiner)
-
-                static void pfadgenerierung(char[,] dungeon_feld)
-                {
-                    int breite = dungeon_feld.GetLength(0);
-                    int hoehe = dungeon_feld.GetLength(1);
-
-            // Positionen von Start und Ende finden
-            int startX = -1, startY = -1, endX = -1, endY = -1;
-
-            for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
-            {
-                for (int zaehler_hoehe = 0; zaehler_hoehe < hoehe; zaehler_hoehe++)
-                {
-                    if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
-                    {
-                        startX = zaehler_breite;
-                        startY = zaehler_hoehe;
-                    }
-                    else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
-                    {
-                        endX = zaehler_breite;
-                        endY = zaehler_hoehe;
-                    }
-                }
-            }
-
-                    // Einfache Pfadgenerierung: horizontal und vertikal verbinden
-                    int x = startX;
-                    int y = startY;
-
-                    while (x != endX)
-                    {
-                        x += (endX > x) ? 1 : -1;
-                        if (dungeon_feld[x, y] == WAND_SYMBOL)
-                            dungeon_feld[x, y] = WEG_SYMBOL;
-                    }
-
-                    while (y != endY)
-                    {
-                        y += (endY > y) ? 1 : -1;
-                        if (dungeon_feld[x, y] == WAND_SYMBOL)
-                            dungeon_feld[x, y] = WEG_SYMBOL;
-                    }
-                }
-
-        */
-
-
+        // Generiert einen Pfad zwischen Start- und Endpunkt
         static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
             int breite = dungeon_feld.GetLength(0);
@@ -314,7 +268,10 @@ namespace Projekt
                 {
                     if (x > 0 && x < breite - 1 && y > 0 && y < hoehe - 1)
                     {
-                        dungeon_feld[x, y] = WEG_SYMBOL;
+                        if (dungeon_feld[x, y] == WAND_SYMBOL)
+                        {
+                            dungeon_feld[x, y] = WEG_SYMBOL;
+                        }
 
                         // Zufällige Richtung wählen
                         int richtung = zufall.Next(4);
