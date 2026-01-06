@@ -23,13 +23,11 @@ namespace Projekt
         public const int HOEHE_MINIMUM = 10;
         public const int HOEHE_MAXIMUM = 25;
 
-        // Mindestabstand zwischen Start- und Endpunkt      NIEMALS ÜBER DEM MINIMUM (BREITE || HOEHE) / 2
-        public const int START_END_ABSTAND = 3;
-
 
         static void Main(string[] args)
         {
-            int dungeon_anzahl = 100; // Anzahl der zu generierenden Dungeons erstmal als Testwert 
+            // Anzahl der zu generierenden Dungeons erstmal als Testwert 
+            int dungeon_anzahl = 100;
 
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
@@ -71,6 +69,7 @@ namespace Projekt
 
             Console.Clear();
 
+        Nacheingabe:
 
             for (int i = 0; i < dungeon_anzahl; i++)
             {
@@ -84,7 +83,7 @@ namespace Projekt
                 (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
                 // Pfadgenerierung zwischen Start und Ende
-                //Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
+                Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
                 // Erstellt weitere Pfade im Dungeon
                 Dungeongenerierung(dungeonFeld, zufall);
@@ -96,6 +95,8 @@ namespace Projekt
             }
 
             Console.ReadKey();
+            Console.Clear();
+            goto Nacheingabe;
 
             // Schreibt das Ergebnis in eine vom Benutzer benannte Datei    Sorgt noch für Probleme beim Testen/ausführen
             //SpeichernInTextdatei(dungeonFeld, breite, hoehe);
@@ -138,11 +139,13 @@ namespace Projekt
             return eingabe;
         }
 
+
         // Durchläuft das gesamte Array und setzt jedes Feld auf das angegebene Füllzeichen.
         static void InitialisiereDungeon(char[,] dungeonFeld)
         {
             int zeilen = dungeonFeld.GetLength(0);
             int spalten = dungeonFeld.GetLength(1);
+
 
             for (int i = 0; i < zeilen; i++)
             {
@@ -151,77 +154,70 @@ namespace Projekt
                     dungeonFeld[i, j] = WAND_SYMBOL;
                 }
             }
+
         }
 
-        // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
-        // Der Rand wird ignoriert
+        /*
+                // Ermittelt zwei unterschiedliche Zufallspositionen für Start und Ende --- Wichtig: Zeile = Breite & Spalte = Höhe
+                // Der Rand wird ignoriert
+                static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
+                {
+                    int start_zeile, start_spalte;
+                    int ende_zeile, ende_spalte;
+
+                    bool dungeon_notwendig = false;
+
+                    do
+                    {
+                        start_zeile = zufall.Next(1, breite - 1);
+                        start_spalte = zufall.Next(1, hoehe - 1);
+
+                        dungeonfeld[start_zeile, start_spalte] = START_SYMBOL;
+
+
+                        ende_zeile = zufall.Next(1, breite - 1);
+                        ende_spalte = zufall.Next(1, hoehe - 1);
+
+                        dungeonfeld[ende_zeile, ende_spalte] = END_SYMBOL;
+
+                        dungeon_notwendig = PruefeVollstaendigkeit(dungeonfeld, start_zeile, start_spalte, ende_zeile, ende_spalte);
+
+
+                    } while (dungeon_notwendig == true && (Math.Abs(ende_zeile - start_zeile) + Math.Abs(ende_spalte - start_spalte) < START_END_ABSTAND));
+
+                    return (start_zeile, start_spalte, ende_zeile, ende_spalte);
+                }
+        */
+
         static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
-            int start_zeile, start_spalte;
-            int ende_zeile, ende_spalte;
+            // Mindestdistanz zum Verhindern, dass Start und Ende zu nah beieinander liegen || Oder sogar nebeneinander
 
-            bool dungeon_notwendig = false;
+            int start_end_abstand = (breite * hoehe) / 20;
+
+            int startZeile, startSpalte;
+            int endeZeile, endeSpalte;
 
             do
             {
-                start_zeile = zufall.Next(1, breite - 1);
-                start_spalte = zufall.Next(1, hoehe - 1);
+                // Start zufällig setzen
+                startZeile = zufall.Next(1, breite - 1);
+                startSpalte = zufall.Next(1, hoehe - 1);
+                
+                // Ende zufällig setzen
+                endeZeile = zufall.Next(1, breite - 1);
+                endeSpalte = zufall.Next(1, hoehe - 1);
+            }
+            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < start_end_abstand);
 
-                dungeonfeld[start_zeile, start_spalte] = START_SYMBOL;
+            // Sicherstellen: Feld vorher sauber (optional, aber robust)
+            dungeonfeld[startZeile, startSpalte] = START_SYMBOL;
+            dungeonfeld[endeZeile, endeSpalte] = END_SYMBOL;
 
-
-                ende_zeile = zufall.Next(1, breite - 1);
-                ende_spalte = zufall.Next(1, hoehe - 1);
-
-                dungeonfeld[ende_zeile, ende_spalte] = END_SYMBOL;
-
-                FindeStart_Ende(dungeonfeld, start_zeile, start_spalte, ende_zeile, ende_spalte);
-
-
-            } while (dungeon_notwendig == true);
-
-            return (start_zeile, start_spalte, ende_zeile, ende_spalte);
+            return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
 
-        // Positionen von Start und Ende finden
-        static bool FindeStart_Ende(char[,] dungeon_feld, int start_zeile, int start_spalte, int ende_zeile, int ende_spalte)
-        {
-            bool dungeon_vollstaendigkeit = false;
-
-            int breite = dungeon_feld.GetLength(0);
-            int hoehe = dungeon_feld.GetLength(1);
-
-            int start_x = -1, start_y = -1, end_x = -1, end_y = -1;
-
-            for (int zaehler_breite = 0; zaehler_breite < breite; zaehler_breite++)
-            {
-                for (int zaehler_hoehe = 0; zaehler_hoehe < hoehe; zaehler_hoehe++)
-                {
-                    if (dungeon_feld[zaehler_breite, zaehler_hoehe] == START_SYMBOL)
-                    {
-                        start_x = zaehler_breite;
-                        start_y = zaehler_hoehe;
-                    }
-                    else if (dungeon_feld[zaehler_breite, zaehler_hoehe] == END_SYMBOL)
-                    {
-                        end_x = zaehler_breite;
-                        end_y = zaehler_hoehe;
-                    }
-                }
-            }
-
-            if (start_x < 0 || start_y < 0 || end_x < 0 || end_y < 0)
-            {
-                dungeon_vollstaendigkeit = false;
-            }
-            else if (start_x > 0 || start_y > 0 || end_x > 0 || end_y > 0)
-            {
-                dungeon_vollstaendigkeit = true;
-            }
-
-            return dungeon_vollstaendigkeit;
-        }
-
+        
         // Generiert einen Pfad zwischen Start- und Endpunkt
         static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
