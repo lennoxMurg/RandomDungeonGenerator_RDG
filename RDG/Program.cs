@@ -154,31 +154,29 @@ namespace Projekt
                     dungeonFeld[i, j] = WAND_SYMBOL;
                 }
             }
-
         }
-
 
 
         static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
             // Mindestdistanz zum Verhindern, dass Start und Ende zu nah beieinander liegen || Oder sogar nebeneinander
 
-            int start_end_abstand = (breite * hoehe) / breite - hoehe;
+
 
             int startZeile, startSpalte;
             int endeZeile, endeSpalte;
 
+            // Start zufällig setzen
+            startZeile = zufall.Next(1, breite - 1);
+            startSpalte = zufall.Next(1, hoehe - 1);
+
             do
             {
-                // Start zufällig setzen
-                startZeile = zufall.Next(1, breite - 1);
-                startSpalte = zufall.Next(1, hoehe - 1);
-                
                 // Ende zufällig setzen
                 endeZeile = zufall.Next(1, breite - 1);
                 endeSpalte = zufall.Next(1, hoehe - 1);
             }
-            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < start_end_abstand);
+            while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < 4); // Mindestabstand von 4 - 1 Feldern (also 3)
 
             // Sicherstellen: Feld vorher sauber (optional, aber robust)
             dungeonfeld[startZeile, startSpalte] = START_SYMBOL;
@@ -187,7 +185,7 @@ namespace Projekt
             return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
 
-        
+
         // Generiert einen Pfad zwischen Start- und Endpunkt
         static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
@@ -215,7 +213,6 @@ namespace Projekt
                     dungeon_feld[zeile, spalte] = WEG_SYMBOL;
                 }
             }
-
         }
 
         static void Dungeongenerierung(char[,] dungeon_feld, Random zufall)
