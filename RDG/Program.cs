@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.IO;
+using System.Collections.Generic;       //Für lists und stacks
+
 
 namespace Projekt
 {
@@ -72,8 +74,8 @@ namespace Projekt
 
             Console.Clear();
 
-                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-                char[,] dungeonFeld = new char[breite, hoehe];
+            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+            char[,] dungeonFeld = new char[breite, hoehe];
 
             for (int i = 0; i < dungeon_anzahl; i++)
             {
@@ -89,7 +91,7 @@ namespace Projekt
                 Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
                 // Erstellt weitere Pfade im Dungeon
-                Dungeongenerierung(dungeonFeld, zufall, start_zeile, start_spalte, end_zeile, end_spalte);
+                Dungeongenerierung_v2(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
 
                 // Zeichnet das Array farbig in die Konsole
@@ -255,13 +257,75 @@ namespace Projekt
             }
         }
 
-        static void Dungeongenerierung_v2(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
+        static void Dungeongenerierung_v2(char[,] dungeon, int startZ, int startS, int endZ, int endS)
         {
-            int breite = dungeon_feld.GetLength(0);
-            int hoehe = dungeon_feld.GetLength(1);
+            int breite = dungeon.GetLength(0);
+            int hoehe = dungeon.GetLength(1);
+            Random rnd = new Random();
 
+            // Alles mit Wänden füllen
+            InitialisiereDungeon(dungeon);
 
+            // Stack (kein var, keine Tuples)
+            Stack<int[]> stack = new Stack<int[]>();
+
+            // Start auf ungerader Position erzwingen
+            int sx = (startZ % 2 == 0) ? startZ + 1 : startZ;
+            int sy = (startS % 2 == 0) ? startS + 1 : startS;
+
+            dungeon[sx, sy] = WEG_SYMBOL;
+            stack.Push(new int[] { sx, sy });
+
+            // Richtungen (2 Schritte!)
+            int[] dx = { 0, 0, 2, -2 };
+            int[] dy = { 2, -2, 0, 0 };
+
+            while (stack.Count > 0)
+            {
+                int[] aktuelle = stack.Peek();
+                int x = aktuelle[0];
+                int y = aktuelle[1];
+
+                // mögliche Richtungen sammeln
+                List<int> moeglich = new List<int>();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int nx = x + dx[i];
+                    int ny = y + dy[i];
+
+                    if (nx > 0 && nx < breite - 1 &&
+                        ny > 0 && ny < hoehe - 1 &&
+                        dungeon[nx, ny] == WAND_SYMBOL)
+                    {
+                        moeglich.Add(i);
+                    }
+                }
+
+                if (moeglich.Count > 0)
+                {
+                    int dir = moeglich[rnd.Next(moeglich.Count)];
+
+                    int nx = x + dx[dir];
+                    int ny = y + dy[dir];
+
+                    // Wand zwischen den Zellen entfernen
+                    dungeon[x + dx[dir] / 2, y + dy[dir] / 2] = WEG_SYMBOL;
+                    dungeon[nx, ny] = WEG_SYMBOL;
+
+                    stack.Push(new int[] { nx, ny });
+                }
+                else
+                {
+                    stack.Pop();
+                }
+            }
+
+            // Start / Ende setzen
+            dungeon[startZ, startS] = START_SYMBOL;
+            dungeon[endZ, endS] = END_SYMBOL;
         }
+
 
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
