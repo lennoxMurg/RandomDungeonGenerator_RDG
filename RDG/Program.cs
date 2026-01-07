@@ -72,7 +72,7 @@ namespace Projekt
 
             Console.Clear();
 
-        Nacheingabe:
+
 
             for (int i = 0; i < dungeon_anzahl; i++)
             {
@@ -98,8 +98,6 @@ namespace Projekt
             }
 
             Console.ReadKey();
-            Console.Clear();
-            goto Nacheingabe;
 
             // Schreibt das Ergebnis in eine vom Benutzer benannte Datei    Sorgt noch für Probleme beim Testen/ausführen
             //SpeichernInTextdatei(dungeonFeld, breite, hoehe);
@@ -213,7 +211,7 @@ namespace Projekt
                 {
                     dungeon_feld[zeile, spalte] = WEG_SYMBOL;
                 }
-                
+
             } while (spalte != end_spalte);
         }
 
