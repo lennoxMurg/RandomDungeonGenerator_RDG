@@ -30,7 +30,7 @@ namespace Projekt
         static void Main(string[] args)
         {
             // Anzahl der zu generierenden Dungeons erstmal als Testwert 
-            int dungeon_anzahl = 100;       //NUR FÜR TESTZWECKE
+            int dungeon_anzahl = 1;       //NUR FÜR TESTZWECKE
 
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
@@ -72,12 +72,12 @@ namespace Projekt
 
             Console.Clear();
 
-
+                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+                char[,] dungeonFeld = new char[breite, hoehe];
 
             for (int i = 0; i < dungeon_anzahl; i++)
             {
-                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-                char[,] dungeonFeld = new char[breite, hoehe];
+
 
                 // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
                 InitialisiereDungeon(dungeonFeld);
@@ -100,7 +100,7 @@ namespace Projekt
             Console.ReadKey();
 
             // Schreibt das Ergebnis in eine vom Benutzer benannte Datei    Sorgt noch für Probleme beim Testen/ausführen
-            //SpeichernInTextdatei(dungeonFeld, breite, hoehe);
+            SpeichernInTextdatei(dungeonFeld, breite, hoehe);
         }
 
 
@@ -109,6 +109,7 @@ namespace Projekt
         {
             int eingabe = dungeon_groeße;
 
+            //Eingabe für die Breite
             if (aktuelle_eingabe == "breite")
             {
                 if (eingabe == 0)
@@ -123,6 +124,8 @@ namespace Projekt
                     }
                 }
             }
+
+            //Eingabe für die Höhe
             else if (aktuelle_eingabe == "hoehe")
             {
                 if (eingabe == 0)
@@ -136,6 +139,8 @@ namespace Projekt
                     }
                 }
             }
+
+
 
             return eingabe;
         }
@@ -193,7 +198,6 @@ namespace Projekt
             int zeile = start_zeile;
             int spalte = start_spalte;
 
-
             do
             {
                 zeile += (end_zeile > zeile) ? 1 : -1;
@@ -215,6 +219,7 @@ namespace Projekt
             } while (spalte != end_spalte);
         }
 
+        //Generierung eines nicht Perfekten dungeons (Mit einnzelnen kleinen bereichen)
         static void Dungeongenerierung(char[,] dungeon_feld, Random zufall, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
         {
             int breite = dungeon_feld.GetLength(0);
@@ -250,9 +255,17 @@ namespace Projekt
             }
         }
 
+        static void Dungeongenerierung_v2(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
+        {
+            int breite = dungeon_feld.GetLength(0);
+            int hoehe = dungeon_feld.GetLength(1);
+
+
+        }
+
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
-        static void GibDungeonAus(char[,] dungeon_feld, int breite, int hoehe)
+        static void GibDungeonAus(char[,] dungeonFeld, int breite, int hoehe)
         {
             Console.WriteLine("--- ZUFALLS-DUNGEON ---");
             Console.WriteLine();
@@ -262,7 +275,7 @@ namespace Projekt
             {
                 for (int i = 0; i < breite; i++)
                 {
-                    char aktuellesZeichen = dungeon_feld[i, j];
+                    char aktuellesZeichen = dungeonFeld[i, j];
 
                     // Farbwechsel je nach Symbol
                     if (aktuellesZeichen == START_SYMBOL)
@@ -286,30 +299,47 @@ namespace Projekt
             }
         }
 
-        // Erstellt eine Textdatei und schreibt das Dungeon-Muster hinein.
         static void SpeichernInTextdatei(char[,] dungeonFeld, int breite, int hoehe)
         {
-            Console.Write("Geben Sie den Dateinamen ein (mit .txt): ");
-            string dateiname = Console.ReadLine();
+            Console.WriteLine("\n--- Speichern ---");
+            Console.WriteLine("Geben Sie den Namen oder Pfad ein:");
+            string eingabe = Console.ReadLine();
 
             try
             {
-                using (StreamWriter sw = new StreamWriter(dateiname))
+                // Falls die Eingabe leer ist, Standardname nutzen
+                if (string.IsNullOrWhiteSpace(eingabe)) eingabe = "dungeon_export.txt";
+
+                // Sicherstellen, dass die Endung .txt vorhanden ist
+                if (!eingabe.EndsWith(".txt")) eingabe += ".txt";
+
+                // Den vollständigen Pfad ermitteln (wandelt relative Pfade in absolute um)
+                string pfad = Path.GetFullPath(eingabe);
+                string verzeichnis = Path.GetDirectoryName(pfad);
+
+                // Ordner erstellen, falls nötig
+                if (!string.IsNullOrEmpty(verzeichnis) && !Directory.Exists(verzeichnis))
+                {
+                    Directory.CreateDirectory(verzeichnis);
+                }
+
+                using (StreamWriter sw = new StreamWriter(pfad))
                 {
                     for (int y = 0; y < hoehe; y++)
                     {
                         for (int x = 0; x < breite; x++)
                         {
-                            sw.Write(dungeonFeld[y, x]);
+                            sw.Write(dungeonFeld[x, y]);
                         }
                         sw.WriteLine();
                     }
                 }
-                Console.WriteLine($"Dungeon erfolgreich in '{dateiname}' gespeichert.");
+                Console.WriteLine($"\nERFOLG! Datei wurde hier gespeichert:");
+                Console.WriteLine(pfad);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Fehler beim Speichern der Datei: {ex.Message}");
+                Console.WriteLine($"FEHLER: {ex.Message}");
             }
         }
     }
