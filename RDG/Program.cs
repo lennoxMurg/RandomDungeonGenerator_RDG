@@ -89,7 +89,7 @@ namespace Projekt
                 Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
                 // Erstellt weitere Pfade im Dungeon
-                Dungeongenerierung(dungeonFeld, zufall);
+                Dungeongenerierung(dungeonFeld, zufall, start_zeile, start_spalte, end_zeile, end_spalte);
 
 
                 // Zeichnet das Array farbig in die Konsole
@@ -196,23 +196,25 @@ namespace Projekt
             int spalte = start_spalte;
 
 
-            while (zeile != end_zeile)
+            do
             {
                 zeile += (end_zeile > zeile) ? 1 : -1;
                 if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
                 {
                     dungeon_feld[zeile, spalte] = WEG_SYMBOL;
                 }
-            }
 
-            while (spalte != end_spalte)
+            } while (zeile != end_zeile);
+
+            do
             {
                 spalte += (end_spalte > spalte) ? 1 : -1;
                 if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
                 {
                     dungeon_feld[zeile, spalte] = WEG_SYMBOL;
                 }
-            }
+                
+            } while (spalte != end_spalte);
         }
 
         static void Dungeongenerierung(char[,] dungeon_feld, Random zufall, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
