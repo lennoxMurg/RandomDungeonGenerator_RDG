@@ -30,7 +30,7 @@ namespace Projekt
         static void Main(string[] args)
         {
             // Anzahl der zu generierenden Dungeons erstmal als Testwert 
-            int dungeon_anzahl = 100;
+            int dungeon_anzahl = 100;       //NUR FÜR TESTZWECKE
 
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
