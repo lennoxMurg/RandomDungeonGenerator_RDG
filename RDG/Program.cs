@@ -88,7 +88,7 @@ namespace Projekt
                 (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
                 // Pfadgenerierung zwischen Start und Ende
-                Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
+                //Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
 
                 // Erstellt weitere Pfade im Dungeon
                 Dungeongenerierung_v2(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
