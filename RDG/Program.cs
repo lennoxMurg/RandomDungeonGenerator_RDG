@@ -31,8 +31,9 @@ namespace Projekt
 
         static void Main(string[] args)
         {
-            // Anzahl der zu generierenden Dungeons erstmal als Testwert 
-            int dungeon_anzahl = 1;       //NUR FÜR TESTZWECKE
+            bool blobgenerierung = false; // Toggle für Blobgenerierung (Der alte Algorithmus)
+            bool dfs_dungeon = false; // Toggle für Dungeongenerierung mit DepthFirstSearch und recurive backtracking (Der neue Algorithmus)
+
 
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
@@ -87,11 +88,14 @@ namespace Projekt
                 // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
                 (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-                // Pfadgenerierung zwischen Start und Ende
-                //Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
-
+                if (blobgenerierung == true)
+                {
+                    // Pfadgenerierung zwischen Start und Ende
+                    Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
+                    Dungeongenerierung(dungeonFeld, zufall, start_zeile, start_spalte, end_zeile, end_spalte);
+                }
                 // Erstellt weitere Pfade im Dungeon
-                Dungeongenerierung_v2(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
+                Dungeongenerierung_v3(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte, zufall);
 
 
                 // Zeichnet das Array farbig in die Konsole
@@ -326,7 +330,68 @@ namespace Projekt
             dungeon[endZ, endS] = END_SYMBOL;
         }
 
+        //Dritte methode um einen Dungeon zu generieren (Mit Recursive backtracking)
+        static void Dungeongenerierung_v3(
+     char[,] dungeon,
+     int startZ,
+     int startS,
+     int endZ,
+     int endS,
+     Random rnd
+ )
+        {
+            int breite = dungeon.GetLength(0);
+            int hoehe = dungeon.GetLength(1);
 
+            // Startposition auf ungerade Koordinaten zwingen
+            int sx = (startZ % 2 == 0) ? startZ + 1 : startZ;
+            int sy = (startS % 2 == 0) ? startS + 1 : startS;
+
+            // Sicherheitscheck
+            if (sx <= 0 || sx >= breite - 1) sx = 1;
+            if (sy <= 0 || sy >= hoehe - 1) sy = 1;
+
+            dungeon[sx, sy] = WEG_SYMBOL;
+
+            // Richtungen: unten, oben, rechts, links (2 Schritte!)
+            int[] dx = { 0, 0, 2, -2 };
+            int[] dy = { 2, -2, 0, 0 };
+
+            void DFS(int x, int y)
+            {
+                // Richtungsreihenfolge zufällig mischen
+                List<int> richtungen = new List<int> { 0, 1, 2, 3 };
+                for (int i = 0; i < richtungen.Count; i++)
+                {
+                    int swap = rnd.Next(i, richtungen.Count);
+                    (richtungen[i], richtungen[swap]) = (richtungen[swap], richtungen[i]);
+                }
+
+                foreach (int dir in richtungen)
+                {
+                    int nx = x + dx[dir];
+                    int ny = y + dy[dir];
+
+                    if (nx > 0 && nx < breite - 1 &&
+                        ny > 0 && ny < hoehe - 1 &&
+                        dungeon[nx, ny] == WAND_SYMBOL)
+                    {
+                        // Wand entfernen
+                        dungeon[x + dx[dir] / 2, y + dy[dir] / 2] = WEG_SYMBOL;
+                        dungeon[nx, ny] = WEG_SYMBOL;
+
+                        DFS(nx, ny);
+                    }
+                }
+            }
+
+            // DFS starten
+            DFS(sx, sy);
+
+            // Start & Ende setzen (am Schluss!)
+            dungeon[startZ, startS] = START_SYMBOL;
+            dungeon[endZ, endS] = END_SYMBOL;
+        }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
         static void GibDungeonAus(char[,] dungeonFeld, int breite, int hoehe)
