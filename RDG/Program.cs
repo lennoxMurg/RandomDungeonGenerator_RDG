@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.IO;
 using System.Collections.Generic;       //Für lists und stacks
 
 
@@ -11,24 +9,23 @@ namespace Projekt
         //  Public variablen für die Konstanten 
 
         // Mindestabstand zwischen Start und Ende
-        public const int START_END_ABSTAND = 4;
+        const int START_END_ABSTAND = 4;
 
         // Festlegung der Symbole für die Kartenelemente
-        public const char WAND_SYMBOL = '#';
-        public const char WEG_SYMBOL = '.';
-        public const char START_SYMBOL = 'S';
-        public const char END_SYMBOL = 'E';
+        const char WAND_SYMBOL = '#';
+        const char WEG_SYMBOL = '.';
+        const char START_SYMBOL = 'S';
+        const char END_SYMBOL = 'E';
 
         // Modulare Benutzereingabe
-        public const int BREITE_MINIMUM = 10;
-        public const int BREITE_MAXIMUM = 50;
-        public const int HOEHE_MINIMUM = 10;
-        public const int HOEHE_MAXIMUM = 25;
+        const int BREITE_MINIMUM = 10;
+        const int BREITE_MAXIMUM = 50;
+        const int HOEHE_MINIMUM = 10;
+        const int HOEHE_MAXIMUM = 25;
 
 
         static void Main(string[] args)
         {
-
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
 
@@ -43,9 +40,10 @@ namespace Projekt
                     // Aufruf der Methode zur Breiten- und Höheneingabe
 
                     aktuelle_eingabe = "breite";
-                    breite = eingabe_dungeon_groesse(breite, hoehe, aktuelle_eingabe);
+                    breite = eingabe_dungeon_groesse(breite, aktuelle_eingabe);
+
                     aktuelle_eingabe = "hoehe";
-                    hoehe = eingabe_dungeon_groesse(hoehe, breite, aktuelle_eingabe);
+                    hoehe = eingabe_dungeon_groesse(hoehe, aktuelle_eingabe);
 
                     // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
                     if (breite != 0 && hoehe != 0)
@@ -90,7 +88,7 @@ namespace Projekt
 
 
         // Eingabe methode für breite und höhe des dungeons
-        static int eingabe_dungeon_groesse(int dungeon_groeße, int andere_groesse, string aktuelle_eingabe)
+        static int eingabe_dungeon_groesse(int dungeon_groeße, string aktuelle_eingabe)
         {
             int eingabe = dungeon_groeße;
 
@@ -171,26 +169,26 @@ namespace Projekt
         }
 
         //Dritte methode um einen Dungeon zu generieren (Mit Recursive backtracking)
-        static void Dungeongenerierung_v3(char[,] dungeonfeld, int startZ, int startS, int endZ, int endS, Random rnd)
+        static void Dungeongenerierung_v3(char[,] dungeonfeld, int startZeile, int startSpalte, int endZeile, int endSpalte, Random rnd)
         {
             int breite = dungeonfeld.GetLength(0);
             int hoehe = dungeonfeld.GetLength(1);
 
             // Startposition auf ungerade Koordinaten zwingen
-            int sx = (startZ % 2 == 0) ? startZ + 1 : startZ;
-            int sy = (startS % 2 == 0) ? startS + 1 : startS;
+            int start_x = (startZeile % 2 == 0) ? startZeile + 1 : startZeile;
+            int start_y = (startSpalte % 2 == 0) ? startSpalte + 1 : startSpalte;
 
             // Sicherheitscheck
-            if (sx <= 0 || sx >= breite - 1) sx = 1;
-            if (sy <= 0 || sy >= hoehe - 1) sy = 1;
+            if (start_x <= 0 || start_x >= breite - 1) start_x = 1;
+            if (start_y <= 0 || start_y >= hoehe - 1) start_y = 1;
 
-            dungeonfeld[sx, sy] = WEG_SYMBOL;
+            dungeonfeld[start_x, start_y] = WEG_SYMBOL;
 
             // Richtungen: unten, oben, rechts, links (2er Schritte!)
-            int[] dx = { 0, 0, 2, -2 };
-            int[] dy = { 2, -2, 0, 0 };
+            int[] richtung_x = { 0, 0, 2, -2 };
+            int[] richtung_y = { 2, -2, 0, 0 };
 
-            void DepthFirstSearch(int x, int y)
+            void DepthFirstSearch(int start_x, int start_y)
             {
                 // Richtungsreihenfolge zufällig mischen
                 List<int> richtungen = new List<int> { 0, 1, 2, 3 };
@@ -202,28 +200,28 @@ namespace Projekt
 
                 foreach (int dir in richtungen)
                 {
-                    int nx = x + dx[dir];
-                    int ny = y + dy[dir];
+                    int punkt_x = start_x + richtung_x[dir];
+                    int punkt_y = start_y + richtung_y[dir];
 
-                    if (nx > 0 && nx < breite - 1 &&
-                        ny > 0 && ny < hoehe - 1 &&
-                        dungeonfeld[nx, ny] == WAND_SYMBOL)
+                    if (punkt_x > 0 && punkt_x < breite - 1 &&
+                        punkt_y > 0 && punkt_y < hoehe - 1 &&
+                        dungeonfeld[punkt_x, punkt_y] == WAND_SYMBOL)
                     {
                         // Wand entfernen
-                        dungeonfeld[x + dx[dir] / 2, y + dy[dir] / 2] = WEG_SYMBOL;
-                        dungeonfeld[nx, ny] = WEG_SYMBOL;
+                        dungeonfeld[start_x + richtung_x[dir] / 2, start_y + richtung_y[dir] / 2] = WEG_SYMBOL;
+                        dungeonfeld[punkt_x, punkt_y] = WEG_SYMBOL;
 
-                        DepthFirstSearch(nx, ny);
+                        DepthFirstSearch(punkt_x, punkt_y);
                     }
                 }
             }
 
             // DFS starten
-            DepthFirstSearch(sx, sy);
+            DepthFirstSearch(start_x, start_y);
 
             // Start & Ende setzen (am Schluss!)
-            dungeonfeld[startZ, startS] = START_SYMBOL;
-            dungeonfeld[endZ, endS] = END_SYMBOL;
+            dungeonfeld[startZeile, startSpalte] = START_SYMBOL;
+            dungeonfeld[endZeile, endSpalte] = END_SYMBOL;
         }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
