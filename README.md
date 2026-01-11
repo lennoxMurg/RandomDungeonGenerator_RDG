@@ -1,4 +1,4 @@
-# RandomDungeonGenerator_RDG
+# RandomDungeonGenerator
 
 Das ist das RandomDungeonGenerator Projekt (RDG)
 
