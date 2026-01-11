@@ -14,6 +14,6 @@ Das Projekt wird von den Semicolon Sheriffs aus der I12-F2 des Adolf-Kolping-Ber
 
 
 
-## Infos zu Dungeon generierung:
+## Algorithmen zur Dungeon generierung:
 -https://www.astrolog.org/labyrnth/algrithm.htm      
--https://gamedev.stackexchange.com/questions/910/algorithm-for-generating-a-2d-maze
+
