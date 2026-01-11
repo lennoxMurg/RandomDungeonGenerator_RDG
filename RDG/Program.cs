@@ -8,10 +8,7 @@ namespace Projekt
 {
     class Program
     {
-        //  Public variablen für die Konstanten
-
-        // Dichte des Dungeons (je kleiner der Wert, desto dichter / Mehr Wege)
-        public const int DUNGEON_DICHTE = 8;
+        //  Public variablen für die Konstanten 
 
         // Mindestabstand zwischen Start und Ende
         public const int START_END_ABSTAND = 4;
@@ -31,9 +28,6 @@ namespace Projekt
 
         static void Main(string[] args)
         {
-            bool blobgenerierung = false; // Toggle für Blobgenerierung (Der alte Algorithmus)
-            bool dfs_dungeon = false; // Toggle für Dungeongenerierung mit DepthFirstSearch und recurive backtracking (Der neue Algorithmus)
-
 
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
@@ -78,35 +72,20 @@ namespace Projekt
             // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
             char[,] dungeonFeld = new char[breite, hoehe];
 
-            for (int i = 0; i < dungeon_anzahl; i++)
-            {
+            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+            InitialisiereDungeon(dungeonFeld);
 
+            // Zufällige Platzierung von S und E || Wichtig für DFS Algorithmus
+            (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
 
-                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-                InitialisiereDungeon(dungeonFeld);
+            // Erstellt Pfade im Dungeon nach recursive backtracking muster
+            Dungeongenerierung_v3(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte, zufall);
 
-                // Zufällige Platzierung von S und E (innerhalb der Spielfeldgrenzen)
-                (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+            // Zeichnet das Array farbig in die Konsole
+            GibDungeonAus(dungeonFeld, breite, hoehe);
 
-                if (blobgenerierung == true)
-                {
-                    // Pfadgenerierung zwischen Start und Ende
-                    Pfadgenerierung(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte);
-                    Dungeongenerierung(dungeonFeld, zufall, start_zeile, start_spalte, end_zeile, end_spalte);
-                }
-                // Erstellt weitere Pfade im Dungeon
-                Dungeongenerierung_v3(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte, zufall);
-
-
-                // Zeichnet das Array farbig in die Konsole
-                GibDungeonAus(dungeonFeld, breite, hoehe);
-
-            }
 
             Console.ReadKey();
-
-            // Schreibt das Ergebnis in eine vom Benutzer benannte Datei    Sorgt noch für Probleme beim Testen/ausführen
-            SpeichernInTextdatei(dungeonFeld, breite, hoehe);
         }
 
 
@@ -146,8 +125,6 @@ namespace Projekt
                 }
             }
 
-
-
             return eingabe;
         }
 
@@ -168,7 +145,7 @@ namespace Projekt
             }
         }
 
-
+        // Platziert Start- und Endposition zufällig im Dungeonfeld
         static (int startZeile, int startSpalte, int endeZeile, int endeSpalte) PlatziereStartUndEnde(char[,] dungeonfeld, Random zufall, int breite, int hoehe)
         {
             int startZeile, startSpalte;
@@ -193,155 +170,11 @@ namespace Projekt
             return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
 
-
-        // Generiert einen geraden Pfad zwischen Start- und Endpunkt
-        // erstellt L-förmigen Pfad || Nur temporär oder als toggle option?
-        static void Pfadgenerierung(char[,] dungeon_feld, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
-        {
-            int breite = dungeon_feld.GetLength(0);
-            int hoehe = dungeon_feld.GetLength(1);
-
-            int zeile = start_zeile;
-            int spalte = start_spalte;
-
-            do
-            {
-                zeile += (end_zeile > zeile) ? 1 : -1;
-                if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
-                {
-                    dungeon_feld[zeile, spalte] = WEG_SYMBOL;
-                }
-
-            } while (zeile != end_zeile);
-
-            do
-            {
-                spalte += (end_spalte > spalte) ? 1 : -1;
-                if (dungeon_feld[zeile, spalte] == WAND_SYMBOL)
-                {
-                    dungeon_feld[zeile, spalte] = WEG_SYMBOL;
-                }
-
-            } while (spalte != end_spalte);
-        }
-
-        //Generierung eines nicht Perfekten dungeons (Mit einnzelnen kleinen bereichen)
-        static void Dungeongenerierung(char[,] dungeon_feld, Random zufall, int start_zeile, int start_spalte, int end_zeile, int end_spalte)
-        {
-            int breite = dungeon_feld.GetLength(0);
-            int hoehe = dungeon_feld.GetLength(1);
-
-            // Zusätzliche Pfade generieren
-            for (int i = 0; i < breite * hoehe / DUNGEON_DICHTE; i++) // Anzahl der zusätzlichen Pfade basierend auf der Größe
-            {
-                int x = zufall.Next(1, breite - 1);
-                int y = zufall.Next(1, hoehe - 1);
-
-                // Erstelle einen kleinen Raum oder Korridor
-                for (int j = 0; j < 5; j++) // Länge des Korridors
-                {
-                    if (x > 0 && x < breite - 1 && y > 0 && y < hoehe - 1)
-                    {
-                        if (dungeon_feld[x, y] == WAND_SYMBOL)
-                        {
-                            dungeon_feld[x, y] = WEG_SYMBOL;
-                        }
-
-                        // Zufällige Richtung wählen
-                        int richtung = zufall.Next(4);
-                        switch (richtung)
-                        {
-                            case 0: x++; break; // Rechts
-                            case 1: x--; break; // Links
-                            case 2: y++; break; // Unten
-                            case 3: y--; break; // Oben
-                        }
-                    }
-                }
-            }
-        }
-
-        static void Dungeongenerierung_v2(char[,] dungeon, int startZ, int startS, int endZ, int endS)
-        {
-            int breite = dungeon.GetLength(0);
-            int hoehe = dungeon.GetLength(1);
-            Random rnd = new Random();
-
-            // Alles mit Wänden füllen
-            InitialisiereDungeon(dungeon);
-
-            // Stack (kein var, keine Tuples)
-            Stack<int[]> stack = new Stack<int[]>();
-
-            // Start auf ungerader Position erzwingen
-            int sx = (startZ % 2 == 0) ? startZ + 1 : startZ;
-            int sy = (startS % 2 == 0) ? startS + 1 : startS;
-
-            dungeon[sx, sy] = WEG_SYMBOL;
-            stack.Push(new int[] { sx, sy });
-
-            // Richtungen (2 Schritte!)
-            int[] dx = { 0, 0, 2, -2 };
-            int[] dy = { 2, -2, 0, 0 };
-
-            while (stack.Count > 0)
-            {
-                int[] aktuelle = stack.Peek();
-                int x = aktuelle[0];
-                int y = aktuelle[1];
-
-                // mögliche Richtungen sammeln
-                List<int> moeglich = new List<int>();
-
-                for (int i = 0; i < 4; i++)
-                {
-                    int nx = x + dx[i];
-                    int ny = y + dy[i];
-
-                    if (nx > 0 && nx < breite - 1 &&
-                        ny > 0 && ny < hoehe - 1 &&
-                        dungeon[nx, ny] == WAND_SYMBOL)
-                    {
-                        moeglich.Add(i);
-                    }
-                }
-
-                if (moeglich.Count > 0)
-                {
-                    int dir = moeglich[rnd.Next(moeglich.Count)];
-
-                    int nx = x + dx[dir];
-                    int ny = y + dy[dir];
-
-                    // Wand zwischen den Zellen entfernen
-                    dungeon[x + dx[dir] / 2, y + dy[dir] / 2] = WEG_SYMBOL;
-                    dungeon[nx, ny] = WEG_SYMBOL;
-
-                    stack.Push(new int[] { nx, ny });
-                }
-                else
-                {
-                    stack.Pop();
-                }
-            }
-
-            // Start / Ende setzen
-            dungeon[startZ, startS] = START_SYMBOL;
-            dungeon[endZ, endS] = END_SYMBOL;
-        }
-
         //Dritte methode um einen Dungeon zu generieren (Mit Recursive backtracking)
-        static void Dungeongenerierung_v3(
-     char[,] dungeon,
-     int startZ,
-     int startS,
-     int endZ,
-     int endS,
-     Random rnd
- )
+        static void Dungeongenerierung_v3(char[,] dungeonfeld, int startZ, int startS, int endZ, int endS, Random rnd)
         {
-            int breite = dungeon.GetLength(0);
-            int hoehe = dungeon.GetLength(1);
+            int breite = dungeonfeld.GetLength(0);
+            int hoehe = dungeonfeld.GetLength(1);
 
             // Startposition auf ungerade Koordinaten zwingen
             int sx = (startZ % 2 == 0) ? startZ + 1 : startZ;
@@ -351,20 +184,20 @@ namespace Projekt
             if (sx <= 0 || sx >= breite - 1) sx = 1;
             if (sy <= 0 || sy >= hoehe - 1) sy = 1;
 
-            dungeon[sx, sy] = WEG_SYMBOL;
+            dungeonfeld[sx, sy] = WEG_SYMBOL;
 
-            // Richtungen: unten, oben, rechts, links (2 Schritte!)
+            // Richtungen: unten, oben, rechts, links (2er Schritte!)
             int[] dx = { 0, 0, 2, -2 };
             int[] dy = { 2, -2, 0, 0 };
 
-            void DFS(int x, int y)
+            void DepthFirstSearch(int x, int y)
             {
                 // Richtungsreihenfolge zufällig mischen
                 List<int> richtungen = new List<int> { 0, 1, 2, 3 };
                 for (int i = 0; i < richtungen.Count; i++)
                 {
-                    int swap = rnd.Next(i, richtungen.Count);
-                    (richtungen[i], richtungen[swap]) = (richtungen[swap], richtungen[i]);
+                    int tauschen = rnd.Next(i, richtungen.Count);
+                    (richtungen[i], richtungen[tauschen]) = (richtungen[tauschen], richtungen[i]);
                 }
 
                 foreach (int dir in richtungen)
@@ -374,23 +207,23 @@ namespace Projekt
 
                     if (nx > 0 && nx < breite - 1 &&
                         ny > 0 && ny < hoehe - 1 &&
-                        dungeon[nx, ny] == WAND_SYMBOL)
+                        dungeonfeld[nx, ny] == WAND_SYMBOL)
                     {
                         // Wand entfernen
-                        dungeon[x + dx[dir] / 2, y + dy[dir] / 2] = WEG_SYMBOL;
-                        dungeon[nx, ny] = WEG_SYMBOL;
+                        dungeonfeld[x + dx[dir] / 2, y + dy[dir] / 2] = WEG_SYMBOL;
+                        dungeonfeld[nx, ny] = WEG_SYMBOL;
 
-                        DFS(nx, ny);
+                        DepthFirstSearch(nx, ny);
                     }
                 }
             }
 
             // DFS starten
-            DFS(sx, sy);
+            DepthFirstSearch(sx, sy);
 
             // Start & Ende setzen (am Schluss!)
-            dungeon[startZ, startS] = START_SYMBOL;
-            dungeon[endZ, endS] = END_SYMBOL;
+            dungeonfeld[startZ, startS] = START_SYMBOL;
+            dungeonfeld[endZ, endS] = END_SYMBOL;
         }
 
         // Gibt das Spielfeld in der Konsole aus. Start/Ende werden farbig hervorgehoben.
@@ -428,48 +261,5 @@ namespace Projekt
             }
         }
 
-        static void SpeichernInTextdatei(char[,] dungeonFeld, int breite, int hoehe)
-        {
-            Console.WriteLine("\n--- Speichern ---");
-            Console.WriteLine("Geben Sie den Namen oder Pfad ein:");
-            string eingabe = Console.ReadLine();
-
-            try
-            {
-                // Falls die Eingabe leer ist, Standardname nutzen
-                if (string.IsNullOrWhiteSpace(eingabe)) eingabe = "dungeon_export.txt";
-
-                // Sicherstellen, dass die Endung .txt vorhanden ist
-                if (!eingabe.EndsWith(".txt")) eingabe += ".txt";
-
-                // Den vollständigen Pfad ermitteln (wandelt relative Pfade in absolute um)
-                string pfad = Path.GetFullPath(eingabe);
-                string verzeichnis = Path.GetDirectoryName(pfad);
-
-                // Ordner erstellen, falls nötig
-                if (!string.IsNullOrEmpty(verzeichnis) && !Directory.Exists(verzeichnis))
-                {
-                    Directory.CreateDirectory(verzeichnis);
-                }
-
-                using (StreamWriter sw = new StreamWriter(pfad))
-                {
-                    for (int y = 0; y < hoehe; y++)
-                    {
-                        for (int x = 0; x < breite; x++)
-                        {
-                            sw.Write(dungeonFeld[x, y]);
-                        }
-                        sw.WriteLine();
-                    }
-                }
-                Console.WriteLine($"\nERFOLG! Datei wurde hier gespeichert:");
-                Console.WriteLine(pfad);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"FEHLER: {ex.Message}");
-            }
-        }
     }
 }
