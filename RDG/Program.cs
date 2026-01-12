@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;       //Für lists und stacks
+using System.Collections.Generic;       //Für lists benötigt
 
 
 namespace Projekt
 {
     class Program
     {
-        //  Public variablen für die Konstanten 
-
         // Mindestabstand zwischen Start und Ende
         const int START_END_ABSTAND = 4;
 
@@ -133,7 +131,6 @@ namespace Projekt
             int zeilen = dungeonFeld.GetLength(0);
             int spalten = dungeonFeld.GetLength(1);
 
-
             for (int i = 0; i < zeilen; i++)
             {
                 for (int j = 0; j < spalten; j++)
@@ -161,9 +158,6 @@ namespace Projekt
             }
             while (Math.Abs(endeZeile - startZeile) + Math.Abs(endeSpalte - startSpalte) < START_END_ABSTAND);
 
-            // Start und Ende setzen
-            dungeonfeld[startZeile, startSpalte] = START_SYMBOL;
-            dungeonfeld[endeZeile, endeSpalte] = END_SYMBOL;
 
             return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
@@ -174,13 +168,39 @@ namespace Projekt
             int breite = dungeonfeld.GetLength(0);
             int hoehe = dungeonfeld.GetLength(1);
 
+
             // Startposition auf ungerade Koordinaten zwingen
-            int start_x = (startZeile % 2 == 0) ? startZeile + 1 : startZeile;
-            int start_y = (startSpalte % 2 == 0) ? startSpalte + 1 : startSpalte;
+            int start_x, start_y;
+
+            if (startZeile % 2 == 0)
+            {
+                start_x = startZeile + 1;
+            }
+            else
+            {
+                start_x = startZeile;
+            }
+
+            if (startSpalte % 2 == 0)
+            {
+                start_y = startSpalte + 1;
+            }
+            else
+            {
+                start_y = startSpalte;
+            }
+
 
             // Sicherheitscheck
-            if (start_x <= 0 || start_x >= breite - 1) start_x = 1;
-            if (start_y <= 0 || start_y >= hoehe - 1) start_y = 1;
+            if (start_x <= 0 || start_x >= breite - 1)
+            {
+                start_x = 1;
+            }
+
+            if (start_y <= 0 || start_y >= hoehe - 1)
+            {
+                start_y = 1;
+            }
 
             dungeonfeld[start_x, start_y] = WEG_SYMBOL;
 
@@ -192,6 +212,7 @@ namespace Projekt
             {
                 // Richtungsreihenfolge zufällig mischen
                 List<int> richtungen = new List<int> { 0, 1, 2, 3 };
+
                 for (int i = 0; i < richtungen.Count; i++)
                 {
                     int tauschen = rnd.Next(i, richtungen.Count);
@@ -203,9 +224,7 @@ namespace Projekt
                     int punkt_x = start_x + richtung_x[dir];
                     int punkt_y = start_y + richtung_y[dir];
 
-                    if (punkt_x > 0 && punkt_x < breite - 1 &&
-                        punkt_y > 0 && punkt_y < hoehe - 1 &&
-                        dungeonfeld[punkt_x, punkt_y] == WAND_SYMBOL)
+                    if (punkt_x > 0 && punkt_x < breite - 1 && punkt_y > 0 && punkt_y < hoehe - 1 && dungeonfeld[punkt_x, punkt_y] == WAND_SYMBOL)
                     {
                         // Wand entfernen
                         dungeonfeld[start_x + richtung_x[dir] / 2, start_y + richtung_y[dir] / 2] = WEG_SYMBOL;
