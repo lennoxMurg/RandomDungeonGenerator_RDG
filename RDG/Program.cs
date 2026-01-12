@@ -124,7 +124,6 @@ namespace Projekt
             return eingabe;
         }
 
-
         // Durchläuft das gesamte Array und setzt jedes Feld auf das angegebene Füllzeichen.
         static void InitialisiereDungeon(char[,] dungeonFeld)
         {
@@ -162,16 +161,15 @@ namespace Projekt
             return (startZeile, startSpalte, endeZeile, endeSpalte);
         }
 
-        //Dritte methode um einen Dungeon zu generieren (Mit Recursive backtracking)
+        // Methode um einen Dungeon zu generieren (Mit Recursive backtracking)
         static void Dungeongenerierung_v3(char[,] dungeonfeld, int startZeile, int startSpalte, int endZeile, int endSpalte, Random rnd)
         {
             int breite = dungeonfeld.GetLength(0);
             int hoehe = dungeonfeld.GetLength(1);
 
-
-            // Startposition auf ungerade Koordinaten zwingen
             int start_x, start_y;
 
+            // Startposition auf ungerade Koordinaten zwingen
             if (startZeile % 2 == 0)
             {
                 start_x = startZeile + 1;
@@ -277,6 +275,5 @@ namespace Projekt
                 Console.WriteLine(); // Zeilenumbruch nach jeder vollständigen Zeile
             }
         }
-
     }
 }
