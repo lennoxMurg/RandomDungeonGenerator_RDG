@@ -86,18 +86,28 @@ namespace Projekt
                 // Zeichnet das Array farbig in die Konsole
                 GibDungeonAus(dungeonFeld, breite, hoehe);
 
-                Console.WriteLine("\n\n");
-                Console.WriteLine("Wollen sie noch einen Dungeon Generieren?    (Ja/Nein)");
-                string antwort = Console.ReadLine().ToUpper();
-                if (antwort == "JA" || antwort == "J")
+                do
                 {
-                    wiederholen = false;
-                    Console.Clear();
-                }
-                else
-                {
-                    wiederholen = true;
-                }
+                    Console.WriteLine("\n\n");
+                    Console.WriteLine("Wollen sie noch einen Dungeon Generieren?    (Ja/Nein)");
+                    string antwort = Console.ReadLine().ToUpper();
+                    if (antwort == "JA" || antwort == "J")
+                    {
+                        wiederholen = false;
+                        Console.Clear();
+                        break;
+                    }
+                    else if (antwort == "NEIN" || antwort == "N")
+                    {
+                        Console.WriteLine("Programm wird beendet...");
+                        wiederholen = true;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ungültige eingabe\nBitte versuchen sie es erneut");
+                    }
+                } while (true);
             }
         }
 
