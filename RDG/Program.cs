@@ -27,61 +27,78 @@ namespace Projekt
             // Initialisierung des Zufallsgenerators
             Random zufall = new Random();
 
-            int breite = 0, hoehe = 0;
-            string aktuelle_eingabe;
 
-            // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
-            do
+            // Variable zum wiederholen der Generierung
+            bool wiederholen = false;
+
+            while (wiederholen == false)
             {
-                try
+                int breite = 0, hoehe = 0;
+                string aktuelle_eingabe = " ";
+
+                // Wiederholt die Abfrage, bis gültige Werte eingegeben wurden
+                do
                 {
-                    // Aufruf der Methode zur Breiten- und Höheneingabe
-
-                    aktuelle_eingabe = "breite";
-                    breite = eingabe_dungeon_groesse(breite, aktuelle_eingabe);
-
-                    aktuelle_eingabe = "hoehe";
-                    hoehe = eingabe_dungeon_groesse(hoehe, aktuelle_eingabe);
-
-                    // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
-                    if (breite != 0 && hoehe != 0)
+                    try
                     {
-                        break;
+                        // Aufruf der Methode zur Breiten- und Höheneingabe
+
+                        aktuelle_eingabe = "breite";
+                        breite = eingabe_dungeon_groesse(breite, aktuelle_eingabe);
+
+                        aktuelle_eingabe = "hoehe";
+                        hoehe = eingabe_dungeon_groesse(hoehe, aktuelle_eingabe);
+
+                        // Wenn beide Werte erfolgreich gesetzt wurden, Schleife verlassen
+                        if (breite != 0 && hoehe != 0)
+                        {
+                            break;
+                        }
                     }
-                }
-                catch (ArgumentException ex)
-                {
-                    // Gibt Fehlermeldungen aus der Eingabe aus
-                    Console.WriteLine(ex.Message);
-                }
-                catch
-                {
-                    // Fängt unvorhergesehene Fehler ab (z.B. falsches Format bei der Eingabe)
-                    Console.WriteLine("Es ist ein Unerwarteter Fehler aufgetreten!\n");
-                }
+                    catch (ArgumentException ex)
+                    {
+                        // Gibt Fehlermeldungen aus der Eingabe aus
+                        Console.WriteLine(ex.Message);
+                    }
+                    catch
+                    {
+                        // Fängt unvorhergesehene Fehler ab (z.B. falsches Format bei der Eingabe)
+                        Console.WriteLine("Es ist ein Unerwarteter Fehler aufgetreten!\n");
+                    }
 
+                }
+                while (true);
+
+                Console.Clear();
+
+                // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
+                char[,] dungeonFeld = new char[breite, hoehe];
+
+                // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
+                InitialisiereDungeon(dungeonFeld);
+
+                // Zufällige Platzierung von S und E || Wichtig für DFS Algorithmus
+                (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
+
+                // Erstellt Pfade im Dungeon nach recursive backtracking muster
+                Dungeongenerierung_v3(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte, zufall);
+
+                // Zeichnet das Array farbig in die Konsole
+                GibDungeonAus(dungeonFeld, breite, hoehe);
+
+                Console.WriteLine("\n\n");
+                Console.WriteLine("Wollen sie noch einen Dungeon Generieren?    (Ja/Nein)");
+                string antwort = Console.ReadLine().ToUpper();
+                if (antwort == "JA" || antwort == "J")
+                {
+                    wiederholen = false;
+                    Console.Clear();
+                }
+                else
+                {
+                    wiederholen = true;
+                }
             }
-            while (true);
-
-            Console.Clear();
-
-            // Erstellung der Datenstruktur (2D-Array) basierend auf Eingabe
-            char[,] dungeonFeld = new char[breite, hoehe];
-
-            // Das Array wird initial komplett mit dem WAND-Zeichen gefüllt
-            InitialisiereDungeon(dungeonFeld);
-
-            // Zufällige Platzierung von S und E || Wichtig für DFS Algorithmus
-            (int start_zeile, int start_spalte, int end_zeile, int end_spalte) = PlatziereStartUndEnde(dungeonFeld, zufall, breite, hoehe);
-
-            // Erstellt Pfade im Dungeon nach recursive backtracking muster
-            Dungeongenerierung_v3(dungeonFeld, start_zeile, start_spalte, end_zeile, end_spalte, zufall);
-
-            // Zeichnet das Array farbig in die Konsole
-            GibDungeonAus(dungeonFeld, breite, hoehe);
-
-
-            Console.ReadKey();
         }
 
 
